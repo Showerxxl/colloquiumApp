@@ -1,0 +1,43 @@
+import UIKit
+
+class RootAuthRouter: RootAuthRouterProtocol {
+    weak var viewController: RootAuthViewController?
+    
+    init(viewController: RootAuthViewController) {
+        self.viewController = viewController
+    }
+    
+    func createStudentViewController() -> UIViewController {
+        return StudentViewController()
+    }
+    
+    func createAssistantViewController() -> UIViewController {
+        return AssistantViewController()
+    }
+    
+    func switchToViewController(from fromVC: UIViewController?, to toVC: UIViewController, role: Role, in container: UIView, completion: @escaping () -> Void) {
+        guard let parentVC = viewController else { return }
+        
+        if toVC.parent == nil {
+            parentVC.addChild(toVC)
+            container.addSubview(toVC.view)
+            toVC.view.translatesAutoresizingMaskIntoConstraints = false
+            toVC.view.pinBottom(to: container.bottomAnchor)
+            toVC.view.pinLeft(to: container)
+            toVC.view.pinRight(to: container)
+            toVC.view.pinTop(to: container.topAnchor)
+            toVC.didMove(toParent: parentVC)
+        }
+        
+        if let fromVC = fromVC {
+            fromVC.willMove(toParent: nil)
+            parentVC.transition(from: fromVC, to: toVC, duration: 0.25, options: .transitionCrossDissolve, animations: {}, completion: { _ in
+                fromVC.view.removeFromSuperview()
+                fromVC.removeFromParent()
+                completion()
+            })
+        } else {
+            completion()
+        }
+    }
+}
