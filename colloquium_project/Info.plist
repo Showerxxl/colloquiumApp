@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>PlaywriteUSTrad-VariableFont_wght.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -19,11 +23,7 @@
 			</array>
 		</dict>
 	</dict>
-    
-    <key>UIAppFonts</key>
-    <array>
-        <string>PlaywriteUSTrad-VariableFont_wght.ttf</string>
-    </array>
-
+	<key>FIRAppCheckDebugToken</key>
+	<string>8B4BD953-BB03-46D1-8851-9597D1092D1C</string>
 </dict>
 </plist>

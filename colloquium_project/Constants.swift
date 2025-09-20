@@ -10,10 +10,6 @@ enum Constants {
 
 
 
-
-
-
-
 extension UIColor {
     
     convenience init (hex: String) {

@@ -1,3 +1,6 @@
+import SwiftData
+import UIKit
+
 class RootAuthModuleBuilder {
     static func build() -> RootAuthViewController {
         let view = RootAuthViewController()

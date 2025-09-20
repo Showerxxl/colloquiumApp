@@ -6,6 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		042600082E7EEDE600679316 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 042600072E7EEDE600679316 /* FirebaseAuth */; };
+		0426000A2E7EEDF700679316 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 042600092E7EEDF700679316 /* FirebaseStorage */; };
+		0426000C2E7EEE0300679316 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0426000B2E7EEE0300679316 /* FirebaseCore */; };
+		0426000E2E7EEE4500679316 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0426000D2E7EEE4500679316 /* FirebaseFirestore */; };
+		0426FFCE2E7EE34B00679316 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 0426FFCD2E7EE34B00679316 /* FirebaseAI */; };
+		0426FFD02E7EE34B00679316 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0426FFCF2E7EE34B00679316 /* FirebaseAnalytics */; };
+		0426FFD22E7EE34B00679316 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0426FFD12E7EE34B00679316 /* FirebaseAnalyticsCore */; };
+		0426FFD42E7EE34B00679316 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 0426FFD32E7EE34B00679316 /* FirebaseAnalyticsIdentitySupport */; };
+		0426FFD62E7EE34B00679316 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 0426FFD52E7EE34B00679316 /* FirebaseAppCheck */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0426FF1E2E7973C000679316 /* colloquium_project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = colloquium_project.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -39,16 +51,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0426FFD42E7EE34B00679316 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				042600082E7EEDE600679316 /* FirebaseAuth in Frameworks */,
+				0426FFD02E7EE34B00679316 /* FirebaseAnalytics in Frameworks */,
+				0426FFD22E7EE34B00679316 /* FirebaseAnalyticsCore in Frameworks */,
+				0426000A2E7EEDF700679316 /* FirebaseStorage in Frameworks */,
+				0426000E2E7EEE4500679316 /* FirebaseFirestore in Frameworks */,
+				0426FFD62E7EE34B00679316 /* FirebaseAppCheck in Frameworks */,
+				0426000C2E7EEE0300679316 /* FirebaseCore in Frameworks */,
+				0426FFCE2E7EE34B00679316 /* FirebaseAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		042600062E7EEDE600679316 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0426FF152E7973C000679316 = {
 			isa = PBXGroup;
 			children = (
 				0426FF202E7973C000679316 /* colloquium_project */,
+				042600062E7EEDE600679316 /* Frameworks */,
 				0426FF1F2E7973C000679316 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +110,15 @@
 			);
 			name = colloquium_project;
 			packageProductDependencies = (
+				0426FFCD2E7EE34B00679316 /* FirebaseAI */,
+				0426FFCF2E7EE34B00679316 /* FirebaseAnalytics */,
+				0426FFD12E7EE34B00679316 /* FirebaseAnalyticsCore */,
+				0426FFD32E7EE34B00679316 /* FirebaseAnalyticsIdentitySupport */,
+				0426FFD52E7EE34B00679316 /* FirebaseAppCheck */,
+				042600072E7EEDE600679316 /* FirebaseAuth */,
+				042600092E7EEDF700679316 /* FirebaseStorage */,
+				0426000B2E7EEE0300679316 /* FirebaseCore */,
+				0426000D2E7EEE4500679316 /* FirebaseFirestore */,
 			);
 			productName = colloquium_project;
 			productReference = 0426FF1E2E7973C000679316 /* colloquium_project.app */;
@@ -154,6 +192,8 @@
 				DEVELOPMENT_TEAM = AX2B57NH5J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = colloquium_project/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to allow you to take photos for your profile and documents.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos for your profile and documents.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -181,6 +221,8 @@
 				DEVELOPMENT_TEAM = AX2B57NH5J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = colloquium_project/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to allow you to take photos for your profile and documents.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photo library to allow you to select photos for your profile and documents.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -352,6 +394,54 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		042600072E7EEDE600679316 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		042600092E7EEDF700679316 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		0426000B2E7EEE0300679316 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		0426000D2E7EEE4500679316 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		0426FFCD2E7EE34B00679316 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		0426FFCF2E7EE34B00679316 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		0426FFD12E7EE34B00679316 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		0426FFD32E7EE34B00679316 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		0426FFD52E7EE34B00679316 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0426FF892E7C842A00679316 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0426FF162E7973C000679316 /* Project object */;
 }

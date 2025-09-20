@@ -4,18 +4,24 @@
 //
 //  Created by Mac on 16.09.2025.
 //
-
 import UIKit
+import FirebaseCore
+import FirebaseAppCheck
 
-@main
+@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        FirebaseApp.configure()
+        
+        // Устанавливаем отладочный провайдер для симулятора
+        let providerFactory = AppCheckDebugProviderFactory()
+        AppCheck.setAppCheckProviderFactory(providerFactory)
+        
+        print("App Check настроен с отладочным провайдером")
         return true
     }
+
 
     // MARK: UISceneSession Lifecycle
 
