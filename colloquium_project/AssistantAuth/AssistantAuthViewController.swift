@@ -1,6 +1,6 @@
 import UIKit
 
-class AssistantViewController: UIViewController {
+class AssistantAuthViewController: UIViewController {
     
     let textLabel = UILabel()
     

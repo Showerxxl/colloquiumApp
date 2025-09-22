@@ -15,7 +15,7 @@ class RootAuthRouter: RootAuthRouterProtocol {
     }
     
     func createAssistantViewController() -> UIViewController {
-        return AssistantViewController()
+        return AssistantAuthViewController()
     }
     
     func switchToViewController(from fromVC: UIViewController?, to toVC: UIViewController, role: Role, in container: UIView, completion: @escaping () -> Void) {
