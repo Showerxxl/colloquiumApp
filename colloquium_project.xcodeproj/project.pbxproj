@@ -39,7 +39,7 @@
 				0426FF302E7973C200679316 /* Exceptions for "colloquium_project" folder in "colloquium_project" target */,
 			);
 			explicitFileTypes = {
-				Info.plist = text.xml;
+				Info.plist = text.plist.info;
 			};
 			path = colloquium_project;
 			sourceTree = "<group>";
