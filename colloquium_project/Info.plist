@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>FIRAppCheckDebugToken</key>
+	<string>8B4BD953-BB03-46D1-8851-9597D1092D1C</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PlaywriteUSTrad-VariableFont_wght.ttf</string>
@@ -23,7 +25,5 @@
 			</array>
 		</dict>
 	</dict>
-	<key>FIRAppCheckDebugToken</key>
-	<string>8B4BD953-BB03-46D1-8851-9597D1092D1C</string>
 </dict>
 </plist>
