@@ -18,9 +18,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        let windowController = RootAuthModuleBuilder.build()
-        let navigationController = UINavigationController(rootViewController: windowController)
-        window.rootViewController = navigationController
+        //        let windowController = RootAuthModuleBuilder.build()
+        let root = TestAssembly.assembly() // <- может вернуть UIViewController или UINavigationController
+        
+        if let nav = root as? UINavigationController {
+            // assembly уже вернул UINavigationController — используем его напрямую
+            window.rootViewController = nav
+        } else {
+            // assembly вернул обычный UIViewController — оборачиваем
+            window.rootViewController = UINavigationController(rootViewController: root)
+        }
         window.makeKeyAndVisible()
     }
 
