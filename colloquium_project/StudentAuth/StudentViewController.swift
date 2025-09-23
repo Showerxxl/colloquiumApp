@@ -141,7 +141,6 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         nameTextField.font = UIFont.systemFont(ofSize: 20)
         nameTextField.layer.borderWidth = 1
         nameTextField.layer.cornerRadius = 10
-        nameTextField.
         nameTextField.setHeight(40)
         nameTextField.pinTop(to: view.safeAreaLayoutGuide.topAnchor, 10)
         nameTextField.pinCenterX(to: view)
