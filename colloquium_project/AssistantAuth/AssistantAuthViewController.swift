@@ -15,6 +15,7 @@ final class AssistantAuthViewController: UIViewController {
         super.viewDidLoad()
         setUpView()
         setUpPasswordToggle()
+        setUpGestureRecognizer()
     }
     
     private func setUpView() {
@@ -43,6 +44,8 @@ final class AssistantAuthViewController: UIViewController {
         mailTextField.textColor = UIColor(hex: "A8A8A8")
         mailTextField.autocapitalizationType = .none
         mailTextField.keyboardType = .emailAddress
+        mailTextField.returnKeyType = .next
+        mailTextField.delegate = self
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -65,6 +68,8 @@ final class AssistantAuthViewController: UIViewController {
         passwordTextField.textColor = UIColor(hex: "A8A8A8")
         passwordTextField.isSecureTextEntry = true
         passwordTextField.autocapitalizationType = .none
+        passwordTextField.returnKeyType = .done
+        passwordTextField.delegate = self
         
         let attributedString2 = NSAttributedString(string: "Password", attributes: attributes)
         passwordTextField.backgroundColor = .white
@@ -125,5 +130,34 @@ final class AssistantAuthViewController: UIViewController {
         loginButton.pinTop(to: passwordTextField.bottomAnchor, 50)
         loginButton.setWidth(200)
         loginButton.setHeight(50)
+    }
+    
+    // MARK: - Keyboard Handling
+    private func setUpGestureRecognizer() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension AssistantAuthViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == mailTextField {
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        hideKeyboard()
     }
 }
