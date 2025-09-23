@@ -34,12 +34,12 @@ class StudentPresenter: StudentPresenterProtocol {
     
     func didTapCameraImage1() {
         print("didTapCameraImage1 called")
-        router.presentImageOptions(for: .camera1)
+        router.presentImageOptions(for: .camera1, isGalleryAllowed: false)
     }
     
     func didTapCameraImage2() {
         print("didTapCameraImage2 called")
-        router.presentImageOptions(for: .camera2)
+        router.presentImageOptions(for: .camera2, isGalleryAllowed: true)
     }
     
     func didSelectImage(_ image: UIImage, for source: ImageSource) {
