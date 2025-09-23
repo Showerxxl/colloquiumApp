@@ -5,7 +5,6 @@ class RootAuthRouter: RootAuthRouterProtocol {
    
     weak var viewController: RootAuthViewController?
 
-    
     init(viewController: RootAuthViewController) {
         self.viewController = viewController
     }

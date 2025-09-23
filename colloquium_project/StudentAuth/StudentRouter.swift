@@ -9,7 +9,7 @@ class StudentRouter: StudentRouterProtocol {
         self.viewController = viewController
     }
     
-    func presentImageOptions(for source: ImageSource) {
+    func presentImageOptions(for source: ImageSource, isGalleryAllowed: Bool) {
         guard let viewController = viewController else { return }
         
         let actionSheet = UIAlertController(title: "Выберите источник", message: nil, preferredStyle: .actionSheet)
@@ -18,9 +18,11 @@ class StudentRouter: StudentRouterProtocol {
             self.presentCamera(for: source)
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Галерея", style: .default, handler: { _ in
-            self.presentGallery(for: source)
-        }))
+        if isGalleryAllowed {
+            actionSheet.addAction(UIAlertAction(title: "Галерея", style: .default, handler: { _ in
+                self.presentGallery(for: source)
+            }))
+        }
         
         actionSheet.addAction(UIAlertAction(title: "Отмена", style: .cancel))
         

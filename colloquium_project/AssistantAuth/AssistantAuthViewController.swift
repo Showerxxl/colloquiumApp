@@ -1,6 +1,6 @@
 import UIKit
 
-class AssistantAuthViewController: UIViewController {
+final class AssistantAuthViewController: UIViewController {
     
     let textLabel = UILabel()
     
@@ -14,15 +14,13 @@ class AssistantAuthViewController: UIViewController {
         setUpView()
     }
     
-    
-    
-    func setUpView() {
+    private func setUpView() {
         setUpTextLabel()
         setUpTextFields()
         setUpLoginButton()
     }
     
-    func setUpTextLabel() {
+    private func setUpTextLabel() {
         textLabel.numberOfLines = 0
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.textAlignment = .center
@@ -34,8 +32,7 @@ class AssistantAuthViewController: UIViewController {
         textLabel.pinCenterX(to: view)
     }
     
-    func setUpTextFields() {
-        
+    private func setUpTextFields() {
         mailTextField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mailTextField)
         
@@ -53,13 +50,10 @@ class AssistantAuthViewController: UIViewController {
         mailTextField.pinTop(to: textLabel.bottomAnchor, 20)
         mailTextField.pinCenterX(to: view)
         
-        
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(passwordTextField)
         
         passwordTextField .borderStyle = .roundedRect
-        
-
         let attributedString2 = NSAttributedString(string: "password", attributes: attributes)
         passwordTextField.attributedPlaceholder = attributedString2
         passwordTextField.layer.borderWidth = 1
@@ -68,10 +62,9 @@ class AssistantAuthViewController: UIViewController {
         passwordTextField.setHeight(40)
         passwordTextField.pinTop(to: mailTextField.bottomAnchor, 15)
         passwordTextField.pinCenterX(to: view)
-        
     }
     
-    func setUpLoginButton() {
+    private func setUpLoginButton() {
         view.addSubview(loginButton)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.setTitle("Login", for: .normal)

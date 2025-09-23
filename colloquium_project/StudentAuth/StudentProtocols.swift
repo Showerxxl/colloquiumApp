@@ -34,7 +34,7 @@ protocol StudentPresenterProtocol {
 }
 
 protocol StudentRouterProtocol {
-    func presentImageOptions(for source: ImageSource)
+    func presentImageOptions(for source: ImageSource, isGalleryAllowed: Bool)
 }
 
 protocol StudentInteractorProtocol {

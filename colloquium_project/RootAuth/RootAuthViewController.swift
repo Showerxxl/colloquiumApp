@@ -8,6 +8,7 @@ class RootAuthViewController: UIViewController, RootAuthViewProtocol {
     private let contentContainer = UIView()
     private let headerView = UIView()
     private let bodyView = UIView()
+    private let colLabel = UILabel()
     
     var presenter: RootAuthPresenterProtocol?
     
@@ -25,31 +26,28 @@ class RootAuthViewController: UIViewController, RootAuthViewProtocol {
         setupButtons()
     }
     
-    func setUpMainScreen() {
+    private func setUpMainScreen() {
         view.backgroundColor = Constants.Color.primary
         setUpName()
     }
 
-    func setUpName() {
+    private func setUpName() {
         let iosLabel = UILabel()
         iosLabel.translatesAutoresizingMaskIntoConstraints = false
-        iosLabel.font = UIFont.systemFont(ofSize: 90)
+        iosLabel.font = UIFont.systemFont(ofSize: 100)
         iosLabel.text = "iOS"
         iosLabel.textColor = .white
         view.addSubview(iosLabel)
-        iosLabel.pinTop(to: view, 80)
+        iosLabel.pinTop(to: view, 100)
         iosLabel.pinCenterX(to: view)
         
-        
-        
-        let colLabel = UILabel()
         colLabel.translatesAutoresizingMaskIntoConstraints = false
-        colLabel.font = UIFont(name: "PlaywriteUSTrad-Regular", size: 40)
+        colLabel.font = UIFont(name: "PlaywriteUSTrad-Regular", size: 55)
         colLabel.text = "colloquium"
+        colLabel.textColor = .black
         view.addSubview(colLabel)
         colLabel.pinCenterX(to: view)
-        colLabel.pinBottom(to: iosLabel, -15)
-        
+        colLabel.pinBottom(to: iosLabel, -40)
     }
 
     
@@ -87,7 +85,7 @@ class RootAuthViewController: UIViewController, RootAuthViewProtocol {
         contentContainer.pinBottom(to: view)
         contentContainer.pinLeft(to: view)
         contentContainer.pinRight(to: view)
-        contentContainer.pinTop(to: view, 300) // Изменено с pinTop(to: view, 300) для большей высоты
+        contentContainer.pinTop(to: colLabel.bottomAnchor, 40) // Изменено с pinTop(to: view, 300) для большей высоты
         
         contentContainer.layer.cornerRadius = 30.0
         contentContainer.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -117,6 +115,7 @@ class RootAuthViewController: UIViewController, RootAuthViewProtocol {
         studentButton.backgroundColor = Constants.Color.primary
         studentButton.tintColor = .black
         studentButton.layer.cornerRadius = 10
+        studentButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         
         headerView.addSubview(studentButton)
         studentButton.translatesAutoresizingMaskIntoConstraints = false
@@ -132,6 +131,7 @@ class RootAuthViewController: UIViewController, RootAuthViewProtocol {
         assistantButton.layer.borderWidth = 2
         assistantButton.tintColor = .black
         assistantButton.layer.cornerRadius = 10
+        assistantButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         
         headerView.addSubview(assistantButton)
         assistantButton.setWidth(170)

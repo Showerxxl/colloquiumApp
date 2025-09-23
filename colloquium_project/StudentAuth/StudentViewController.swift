@@ -1,28 +1,23 @@
 import UIKit
 
-class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldDelegate {  // Добавлен UITextFieldDelegate
-    
-    let nameTextField = UITextField()
-    let cameraImage1 = UIImageView()
-    let cameraImage2 = UIImageView()
-    
-    let cameraButton1 = UIButton()
-    let cameraButton2 = UIButton()
-    
-    let loginButton = UIButton()
+class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldDelegate {
     
     var presenter: StudentPresenterProtocol?
-    
     var currentImageSource: ImageSource?
     
-    var tempPhoto1: UIImage?
-    var tempPhoto2: UIImage?
+    private let nameTextField = UITextField()
+    private let cameraImage1 = UIImageView()
+    private let cameraImage2 = UIImageView()
+    private let cameraButton1 = UIButton()
+    private let cameraButton2 = UIButton()
+    private let loginButton = UIButton()
+    private var tempPhoto1: UIImage?
+    private var tempPhoto2: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.viewDidLoad()
         
-        // Добавляем жест для скрытия клавиатуры при тапе на экран
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -37,21 +32,6 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
     
     func updateUI(with userData: UserData) {
         nameTextField.text = userData.username
-        if let photo1Url = userData.photo1Url {
-            presenter?.loadImage(fromUrl: photo1Url) { image in
-                self.cameraImage1.image = image ?? UIImage(named: "cameraman")
-            }
-        } else {
-            cameraImage1.image = UIImage(named: "cameraman")
-        }
-        
-        if let photo2Url = userData.photo2Url {
-            presenter?.loadImage(fromUrl: photo2Url) { image in
-                self.cameraImage2.image = image ?? UIImage(named: "cameraman")
-            }
-        } else {
-            cameraImage2.image = UIImage(named: "cameraman")
-        }
     }
     
     func updateTempImage(_ image: UIImage, for source: ImageSource) {
@@ -67,19 +47,21 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
     private func setUpPhotoViews() {
         view.addSubview(cameraImage1)
         cameraImage1.translatesAutoresizingMaskIntoConstraints = false
-        cameraImage1.image = UIImage(named: "cameraman")
+        cameraImage1.image = UIImage(systemName: "camera")
         cameraImage1.pinTop(to: nameTextField.bottomAnchor, 40)
-        cameraImage1.pinLeft(to: nameTextField.leadingAnchor)
-        cameraImage1.setWidth(25)
-        cameraImage1.setHeight(25)
+        cameraImage1.pinLeft(to: nameTextField.leadingAnchor, 10)
+        cameraImage1.setWidth(35)
+        cameraImage1.setHeight(30)
+        cameraImage1.tintColor = UIColor(hex: "F19EDC")
         
         view.addSubview(cameraImage2)
         cameraImage2.translatesAutoresizingMaskIntoConstraints = false
-        cameraImage2.image = UIImage(named: "cameraman")
+        cameraImage2.image = UIImage(systemName: "camera")
         cameraImage2.pinTop(to: cameraImage1.bottomAnchor, 40)
-        cameraImage2.pinLeft(to: nameTextField.leadingAnchor)
-        cameraImage2.setWidth(25)
-        cameraImage2.setHeight(25)
+        cameraImage2.pinLeft(to: nameTextField.leadingAnchor, 10)
+        cameraImage2.setWidth(35)
+        cameraImage2.setHeight(30)
+        cameraImage2.tintColor = UIColor(hex: "F19EDC")
     }
     
     
@@ -88,9 +70,9 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         cameraButton1.translatesAutoresizingMaskIntoConstraints = false
         cameraButton1.setTitle("Ваше селфи", for: .normal)
         cameraButton1.contentHorizontalAlignment = .left
-        cameraButton1.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        cameraButton1.setTitleColor(.gray, for: .normal)
-        cameraButton1.pinTop(to: nameTextField.bottomAnchor, 40)
+        cameraButton1.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        cameraButton1.setTitleColor(UIColor(hex: "A8A8A8"), for: .normal)
+        cameraButton1.pinCenterY(to: cameraImage1)
         cameraButton1.pinLeft(to: cameraImage1.trailingAnchor, 20)
         cameraButton1.setWidth(300)
         cameraButton1.setHeight(25)
@@ -99,9 +81,9 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         cameraButton2.translatesAutoresizingMaskIntoConstraints = false
         cameraButton2.setTitle("Фото студенческого билета", for: .normal)
         cameraButton2.contentHorizontalAlignment = .left
-        cameraButton2.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        cameraButton2.setTitleColor(.gray, for: .normal)
-        cameraButton2.pinTop(to: cameraButton1.bottomAnchor, 40)
+        cameraButton2.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        cameraButton2.setTitleColor(UIColor(hex: "A8A8A8"), for: .normal)
+        cameraButton2.pinCenterY(to: cameraImage2)
         cameraButton2.pinLeft(to: cameraImage2.trailingAnchor, 20)
         cameraButton2.setWidth(300)
         cameraButton2.setHeight(25)
@@ -133,6 +115,7 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         loginButton.pinTop(to: cameraButton2.bottomAnchor, 50)
         loginButton.setWidth(200)
         loginButton.setHeight(50)
+        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
         loginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
     }
     
@@ -146,37 +129,37 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         view.addSubview(nameTextField)
         
         nameTextField.borderStyle = .roundedRect
+        nameTextField.layer.borderColor = UIColor(hex: "A8A8A8").cgColor
+        nameTextField.textColor = UIColor(hex: "A8A8A8")
+        nameTextField.backgroundColor = .white
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        let attributes: [NSAttributedString.Key: Any] = [.paragraphStyle: paragraphStyle, .foregroundColor: UIColor.gray]
-        let attributedString = NSAttributedString(string: "Хромова Елизавета Ивановна", attributes: attributes)
+        let attributes: [NSAttributedString.Key: Any] = [.paragraphStyle: paragraphStyle, .foregroundColor: UIColor(hex: "A8A8A8")]
+        let attributedString = NSAttributedString(string: "ФИО", attributes: attributes)
         nameTextField.attributedPlaceholder = attributedString
+        nameTextField.font = UIFont.systemFont(ofSize: 20)
         nameTextField.layer.borderWidth = 1
         nameTextField.layer.cornerRadius = 10
-        nameTextField.setWidth(300)
         nameTextField.setHeight(40)
         nameTextField.pinTop(to: view.safeAreaLayoutGuide.topAnchor, 10)
         nameTextField.pinCenterX(to: view)
+        nameTextField.pinLeft(to: view, 15)
+        nameTextField.pinRight(to: view, 15)
         nameTextField.addTarget(self, action: #selector(handleTextField), for: .touchUpInside)
         
-        // Добавляем делегата для обработки Enter
         nameTextField.delegate = self
-        nameTextField.returnKeyType = .done  // Опционально: меняет Enter на Done
+        nameTextField.returnKeyType = .done
     }
     
-    // Метод для скрытия клавиатуры при тапе
     @objc private func hideKeyboard() {
         view.endEditing(true)
     }
-    
-    // Делегат для скрытия клавиатуры при Enter
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-
-    
 }
 
 
