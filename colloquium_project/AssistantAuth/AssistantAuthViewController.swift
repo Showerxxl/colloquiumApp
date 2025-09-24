@@ -10,7 +10,17 @@ final class AssistantAuthViewController: UIViewController {
     let loginButton = UIButton()
     private let passwordToggleButton = UIButton()
     private var isPasswordVisible = false
+    private let interactor: AssistantAuthInteractionLogic
 
+    init(interactor: AssistantAuthInteractionLogic) {
+        self.interactor = interactor
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -133,6 +143,16 @@ final class AssistantAuthViewController: UIViewController {
         loginButton.pinTop(to: passwordTextField.bottomAnchor, 50)
         loginButton.setWidth(200)
         loginButton.setHeight(50)
+        loginButton.addTarget(self, action: #selector(loginButtonPressed), for: .touchUpInside)
+    }
+    
+    @objc
+    private func loginButtonPressed() {
+        guard let email = mailTextField.text, let password = passwordTextField.text, !email.isEmpty, !password.isEmpty else {
+            // TODO: выводим на экран сообщение о том, что надо заполнить данные
+            return
+        }
+        interactor.SendUserData(email: email, password: password)
     }
     
     // MARK: - Keyboard Handling
