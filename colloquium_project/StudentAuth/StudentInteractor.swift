@@ -1,142 +1,133 @@
 import UIKit
+import SwiftUI
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
-import FirebaseStorage
 
 class StudentInteractor: StudentInteractorProtocol {
     
     private let db = Firestore.firestore()
-    private let storage = Storage.storage()
     
     init() {
         print("StudentInteractor initialized with Firebase")
     }
     
-    func saveUserData(username: String, photo1: UIImage?, photo2: UIImage?) {
-        guard !username.isEmpty, let photo1 = photo1, let photo2 = photo2 else {
-            print("Incomplete data for saving")
-            return
-        }
-        
-        Auth.auth().signInAnonymously { authResult, error in
+    // TODO: сделать регулярку для почты 
+    func saveUserData(username: String, email: String) {
+// MARK: тут ниже раскоммитеть если с акканутом
+//        guard !username.isEmpty, !email.isEmpty else {
+//            print("Incomplete data for saving")
+//            return
+//        }
+//        
+//        let actionCodeSettings = ActionCodeSettings()
+//        actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
+//        actionCodeSettings.handleCodeInApp = true
+//        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+//        
+//        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
+//            if let error = error {
+//                print("Error sending email link: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            print("Verification email link sent to \(email)")
+//            UserDefaults.standard.set(email, forKey: "pendingEmail")
+//            
+//            self.db.collection("pending_users").document(email).setData([
+//                "username": username,
+//                "email": email,
+//                "type": "student"
+//            ]) { err in
+//                if let err = err {
+//                    print("Error saving pending user: \(err.localizedDescription)")
+//                } else {
+//                    print("Pending user data saved")
+//                }
+//            }
+//        }
+//        return
+// MARK: тут раскоммитить если без аккаунта
+        Auth.auth().signIn(withEmail: email, password: "123456") {
+            authResult, error in
             if let error = error {
-                print("Error signing in anonymously: \(error.localizedDescription)")
+                print("Assistant sign in failed: \(error.localizedDescription)")
                 return
             }
             
             guard let user = authResult?.user else {
-                print("No user after anonymous sign-in")
                 return
             }
             
             let uid = user.uid
-            let storageRef = self.storage.reference().child("users/\(uid)")
+            let db = Firestore.firestore()
             
-            guard let photo1Data = photo1.jpegData(compressionQuality: 0.8),
-                  let photo2Data = photo2.jpegData(compressionQuality: 0.8) else {
-                print("Error compressing images")
-                return
+            db.collection("users").document(uid).getDocument {
+                document, error in
+                if let data = document?.data(), data["type"] as? String == "student" {
+                    // TODO: роутинг на студента
+                    self.routingToAssistantLoggedIn()
+                    print("Student signed in")
+                } else {
+                    print("Not a student")
+                }
             }
-            
-            let photo1Ref = storageRef.child("photo1.jpg")
-            let photo2Ref = storageRef.child("photo2.jpg")
-            
-            photo1Ref.putData(photo1Data, metadata: nil) { _, error in
+        }
+    }
+    
+    func handleSignIn(email: String, link: String, completion: @escaping (Bool) -> Void) {
+        if Auth.auth().isSignIn(withEmailLink: link) {
+            Auth.auth().signIn(withEmail: email, link: link) { authResult, error in
                 if let error = error {
-                    print("Error uploading photo1: \(error.localizedDescription)")
+                    print("Error signing in with link: \(error.localizedDescription)")
+                    completion(false)
                     return
                 }
-                photo1Ref.downloadURL { url1, error in
-                    if let error = error {
-                        print("Error getting photo1 URL: \(error.localizedDescription)")
+                
+                guard let user = authResult?.user else {
+                    print("No user after signInWithEmailLink")
+                    completion(false)
+                    return
+                }
+                
+                let uid = user.uid
+                
+                self.db.collection("pending_users").document(email).getDocument { document, error in
+                    guard let data = document?.data() else {
+                        print("No pending data for email")
+                        completion(false)
                         return
                     }
                     
-                    photo2Ref.putData(photo2Data, metadata: nil) { _, error in
-                        if let error = error {
-                            print("Error uploading photo2: \(error.localizedDescription)")
-                            return
-                        }
-                        photo2Ref.downloadURL { url2, error in
-                            if let error = error {
-                                print("Error getting photo2 URL: \(error.localizedDescription)")
-                                return
-                            }
-                            
-                            let userData: [String: Any] = [
-                                "username": username,
-                                "type": "student",
-                                "photo1Url": url1?.absoluteString ?? "",
-                                "photo2Url": url2?.absoluteString ?? ""
-                            ]
-                            
-                            self.db.collection("users").document(uid).setData(userData) { error in
-                                if let error = error {
-                                    print("Error saving user data: \(error.localizedDescription)")
-                                } else {
-                                    print("Successfully saved UserData for student: \(username)")
-                                }
-                            }
+                    self.db.collection("users").document(uid).setData(data) { err in
+                        if let err = err {
+                            print("Error saving user data: \(err.localizedDescription)")
+                            completion(false)
+                        } else {
+                            print("User \(email) successfully verified and saved with UID \(uid)")
+                            self.db.collection("pending_users").document(email).delete()
+                            completion(true)
                         }
                     }
                 }
             }
+        } else {
+            print("Invalid sign-in link")
+            completion(false)
         }
     }
     
-    func getUserData(completion: @escaping (UserData?) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("No authenticated user")
-            completion(nil)
-            return
+    private func routingToAssistantLoggedIn() {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                
+                let view = AssistantBuilder.build()
+                
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    window.rootViewController = view
+                }, completion: nil)
+            }
         }
-        
-        db.collection("users").document(uid).getDocument { document, error in
-            if let error = error {
-                print("Error getting user data: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            guard let data = document?.data() else {
-                print("No user data found")
-                completion(nil)
-                return
-            }
-            
-            let username = data["username"] as? String ?? ""
-            let type = data["type"] as? String ?? "student"
-            let photo1Url = data["photo1Url"] as? String
-            let photo2Url = data["photo2Url"] as? String
-            
-            let userData = UserData(username: username, type: type, photo1Url: photo1Url, photo2Url: photo2Url)
-            print("Found student data: \(username)")
-            completion(userData)
-        }
-    }
-    
-    func loadImage(fromUrl urlString: String?, completion: @escaping (UIImage?) -> Void) {
-        guard let urlString = urlString, let url = URL(string: urlString) else {
-            completion(nil)
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-            
-            DispatchQueue.main.async {
-                completion(UIImage(data: data))
-            }
-        }.resume()
     }
 }
