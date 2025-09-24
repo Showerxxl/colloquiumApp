@@ -14,34 +14,62 @@ class StudentInteractor: StudentInteractorProtocol {
     
     // TODO: сделать регулярку для почты 
     func saveUserData(username: String, email: String) {
-        guard !username.isEmpty, !email.isEmpty else {
-            print("Incomplete data for saving")
-            return
-        }
-        
-        let actionCodeSettings = ActionCodeSettings()
-        actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
-        actionCodeSettings.handleCodeInApp = true
-        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
-        
-        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
+// MARK: тут ниже раскоммитеть если с акканутом
+//        guard !username.isEmpty, !email.isEmpty else {
+//            print("Incomplete data for saving")
+//            return
+//        }
+//        
+//        let actionCodeSettings = ActionCodeSettings()
+//        actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
+//        actionCodeSettings.handleCodeInApp = true
+//        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+//        
+//        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
+//            if let error = error {
+//                print("Error sending email link: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            print("Verification email link sent to \(email)")
+//            UserDefaults.standard.set(email, forKey: "pendingEmail")
+//            
+//            self.db.collection("pending_users").document(email).setData([
+//                "username": username,
+//                "email": email,
+//                "type": "student"
+//            ]) { err in
+//                if let err = err {
+//                    print("Error saving pending user: \(err.localizedDescription)")
+//                } else {
+//                    print("Pending user data saved")
+//                }
+//            }
+//        }
+//        return
+// MARK: тут раскоммитить если без аккаунта
+        Auth.auth().signIn(withEmail: email, password: "123456") {
+            authResult, error in
             if let error = error {
-                print("Error sending email link: \(error.localizedDescription)")
+                print("Assistant sign in failed: \(error.localizedDescription)")
                 return
             }
             
-            print("Verification email link sent to \(email)")
-            UserDefaults.standard.set(email, forKey: "pendingEmail")
+            guard let user = authResult?.user else {
+                return
+            }
             
-            self.db.collection("pending_users").document(email).setData([
-                "username": username,
-                "email": email,
-                "type": "student"
-            ]) { err in
-                if let err = err {
-                    print("Error saving pending user: \(err.localizedDescription)")
+            let uid = user.uid
+            let db = Firestore.firestore()
+            
+            db.collection("users").document(uid).getDocument {
+                document, error in
+                if let data = document?.data(), data["type"] as? String == "student" {
+                    // TODO: роутинг на студента
+                    self.routingToAssistantLoggedIn()
+                    print("Student signed in")
                 } else {
-                    print("Pending user data saved")
+                    print("Not a student")
                 }
             }
         }
@@ -86,6 +114,20 @@ class StudentInteractor: StudentInteractorProtocol {
         } else {
             print("Invalid sign-in link")
             completion(false)
+        }
+    }
+    
+    private func routingToAssistantLoggedIn() {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                
+                let view = AssistantBuilder.build()
+                
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    window.rootViewController = view
+                }, completion: nil)
+            }
         }
     }
 }
