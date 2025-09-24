@@ -95,31 +95,31 @@ final class QuestionViewController: UIViewController {
     }
 
     @objc private func optionTapped(_ sender: UIButton) {
-        guard let vm = currentVM else { return }
-        guard let opt = vm.options.first(where: { $0.id.hashValue == sender.tag }) else { return }
-        // View calls interactor to save answer
-        interactor?.saveAnswer(questionId: vm.id, textAnswer: nil, optionId: opt.id)
-        // Update UI highlight
-        for case let b as UIButton in optionsStack.arrangedSubviews { b.backgroundColor = (b.tag == sender.tag) ? UIColor.systemGray5 : .clear }
+//        guard let vm = currentVM else { return }
+//        guard let opt = vm.options.first(where: { $0.id.hashValue == sender.tag }) else { return }
+//        // View calls interactor to save answer
+//        interactor?.saveAnswer(questionId: vm.id, textAnswer: nil, optionId: opt.id)
+//        // Update UI highlight
+//        for case let b as UIButton in optionsStack.arrangedSubviews { b.backgroundColor = (b.tag == sender.tag) ? UIColor.systemGray5 : .clear }
     }
 
     @objc private func nextTapped() {
-        guard let vm = currentVM else { return }
-        if vm.type == .open {
-            let txt = textView.text ?? ""
-            if txt.count < vm.minSymbols {
-                let a = UIAlertController(title: "Too short", message: "Минимум символов: \(vm.minSymbols)", preferredStyle: .alert)
-                a.addAction(UIAlertAction(title: "OK", style: .default))
-                present(a, animated: true)
-                // ❌ не делаем return
-            } else {
-                interactor?.saveAnswer(questionId: vm.id, textAnswer: txt, optionId: nil)
-            }
-        }
-        interactor?.goNext()
+//        guard let vm = currentVM else { return }
+//        if vm.type == .open {
+//            let txt = textView.text ?? ""
+//            if txt.count < vm.minSymbols {
+//                let a = UIAlertController(title: "Too short", message: "Минимум символов: \(vm.minSymbols)", preferredStyle: .alert)
+//                a.addAction(UIAlertAction(title: "OK", style: .default))
+//                present(a, animated: true)
+//                // ❌ не делаем return
+//            } else {
+//                interactor?.saveAnswer(questionId: vm.id, textAnswer: txt, optionId: nil)
+//            }
+//        }
+//        interactor?.goNext()
     }
     
     @objc private func backTapped() {
-        interactor?.goBack()
+//        interactor?.goBack()
     }
 }

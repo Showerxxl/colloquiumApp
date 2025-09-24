@@ -16,16 +16,16 @@ enum TestAssembly {
 
         let overview = OverviewViewController()
         overview.interactor = interactor
-        presenter.view = overview
+        presenter.overviewVC = overview
 
-        presenter.createQuestionVC = { [weak interactor] in
+        presenter.createQuestionVC = { [weak interactor, weak presenter] in
             let qvc = QuestionViewController()
             qvc.interactor = interactor
+            presenter?.questionVC = qvc
             return qvc
         }
-
-        let nav = UINavigationController(rootViewController: overview)
-        return nav
+        
+        return overview
     }
 }
 

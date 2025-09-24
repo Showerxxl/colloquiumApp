@@ -14,17 +14,7 @@ protocol TestServiceProtocol {
 final class MockTestService: TestServiceProtocol {
     func fetchTest(completion: @escaping (Result<Test, Error>) -> Void) {
         // Mock questions
-        let q1 = Question(id: "q1",
-                          title: "Что такое enum? Является ли enum в Swift ссылочным или значимым типом?",
-                          type: .open,
-                          options: [],
-                          minSymbols: 10)
-        let q2 = Question(id: "q2",
-                          title: "Назовите 5 этапов жизненного цикла приложения iOS. Что они собой представляют?",
-                          type: .open,
-                          options: [],
-                          minSymbols: 5)
-        let q3 = Question(id: "q3",
+        let q1 = Question(id: "q3",
                           title: "Как сделать enum десериализуемым?",
                           type: .singleChoice,
                           options: [
@@ -34,7 +24,7 @@ final class MockTestService: TestServiceProtocol {
                             AnswerOption(id: "d", text: "Реализовать Hashable и Equatable")
                           ],
                           minSymbols: 0)
-        let q4 = Question(id: "q4",
+        let q2 = Question(id: "q4",
                           title: "Схема какой архитектуры приведена на картинке?",
                           type: .singleChoice,
                           options: [
@@ -44,7 +34,7 @@ final class MockTestService: TestServiceProtocol {
                             AnswerOption(id: "d", text: "VIPER")
                           ],
                           minSymbols: 0)
-        let test = Test(id: "t1", title: "iOS Mock Test", durationSeconds: 3600, questions: [q1, q2, q3, q4])
+        let test = Test(id: "t1", title: "iOS Mock Test", durationSeconds: 3600, questions: [q1, q2])
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             completion(.success(test))
         }
