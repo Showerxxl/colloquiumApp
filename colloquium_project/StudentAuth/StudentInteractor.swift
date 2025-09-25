@@ -14,7 +14,7 @@ class StudentInteractor: StudentInteractorProtocol {
     
     // TODO: сделать регулярку для почты 
     func saveUserData(username: String, email: String) {
-// MARK: тут ниже раскоммитеть если с акканутом
+        // MARK: тут раскомментить если с акканутом
 //        guard !username.isEmpty, !email.isEmpty else {
 //            print("Incomplete data for saving")
 //            return
@@ -47,7 +47,7 @@ class StudentInteractor: StudentInteractorProtocol {
 //            }
 //        }
 //        return
-// MARK: тут раскоммитить если без аккаунта
+// MARK: тут раскомментить если без аккаунта
         Auth.auth().signIn(withEmail: email, password: "123456") {
             authResult, error in
             if let error = error {
@@ -73,7 +73,7 @@ class StudentInteractor: StudentInteractorProtocol {
                 }
             }
         }
-    }
+}
     
     func handleSignIn(email: String, link: String, completion: @escaping (Bool) -> Void) {
         if Auth.auth().isSignIn(withEmailLink: link) {

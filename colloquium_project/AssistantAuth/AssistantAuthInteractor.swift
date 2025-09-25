@@ -48,7 +48,7 @@ final class AssistantAuthInteractor: AssistantAuthInteractionLogic {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let window = windowScene.windows.first {
                 
-                let view = AssistantBuilder.build()
+                let view = AssistantStartBuilder.build()
                 
                 UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
                     window.rootViewController = view
