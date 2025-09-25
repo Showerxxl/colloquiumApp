@@ -13,4 +13,8 @@ final class AssistantStartInteractor: AssistantStartInteractionLogic {
     init(presenter: AssistantStartPresentationLogic) {
         self.presenter = presenter
     }
+    
+    func routingToAssistantAccount() {
+        presenter.routingToAssistantAccount()
+    }
 }

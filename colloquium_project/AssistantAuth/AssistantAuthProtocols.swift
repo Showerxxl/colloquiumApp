@@ -8,7 +8,7 @@
 import Foundation
 
 protocol AssistantAuthPresentationLogic {
-    
+    func routingToAssistantStart()
 }
 
 protocol AssistantAuthInteractionLogic {

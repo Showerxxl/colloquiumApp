@@ -8,9 +8,9 @@
 import Foundation
 
 protocol AssistantStartPresentationLogic {
-    
+    func routingToAssistantAccount()
 }
 
 protocol AssistantStartInteractionLogic {
-    
+    func routingToAssistantAccount()
 }

@@ -32,6 +32,7 @@ final class AssistantStartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.hidesBackButton = true
         configureUI()
     }
     
@@ -57,7 +58,7 @@ final class AssistantStartViewController: UIViewController {
     
     @objc
     private func accountButtonTapped() {
-        // TODO: rounting to assistant account 
+        interactor.routingToAssistantAccount()
     }
     
     private func configureListLabel() {
