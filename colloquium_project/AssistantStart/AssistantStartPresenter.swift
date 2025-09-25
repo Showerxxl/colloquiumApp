@@ -11,11 +11,12 @@ final class AssistantStartPresenter: AssistantStartPresentationLogic {
     weak var view: AssistantStartViewController?
     
     func routingToAssistantAccount() {
-        guard let navigationController = view?.navigationController else {
-            print("❌ navigationController is nil!")
-            return
-        }
         let vc = AssistantAccountBuilder.build()
-        navigationController.pushViewController(vc, animated: true)
+        view?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func routingToChooseStudents(students: [Student]) {
+        let vc = ChooseStudentsBuilder.build(students: students)
+        view?.navigationController?.pushViewController(vc, animated: true)
     }
 }

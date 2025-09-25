@@ -80,7 +80,7 @@ final class AssistantStartViewController: UIViewController {
         startButton.setTitle("Начать тестирование", for: .normal)
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         
-        startButton.layer.cornerRadius = 12
+        startButton.layer.cornerRadius = 20
         startButton.layer.masksToBounds = true
         
         view.addSubview(startButton)
@@ -94,7 +94,7 @@ final class AssistantStartViewController: UIViewController {
     
     @objc
     private func startButtonTapped() {
-        // TODO: touting to thr screen with students list
+        interactor.routingToChooseStudents()
     }
     
     private func configureTableView() {
