@@ -86,7 +86,7 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
     private func configureInfoLabel() {
         infoLabel.numberOfLines = 0
         infoLabel.textAlignment = .center
-        infoLabel.text = "На вашу почту прийдет ссылка-подтверждение. Перейдите по ней, чтобы войти"
+        infoLabel.text = "На вашу почту отправлена ссылка-подтверждение. Перейдите по ней, чтобы войти"
         infoLabel.font = UIFont.systemFont(ofSize: 20)
         infoLabel.textColor = UIColor(hex: "A8A8A8")
         view.addSubview(infoLabel)
