@@ -15,64 +15,64 @@ class StudentInteractor: StudentInteractorProtocol {
     // TODO: сделать регулярку для почты 
     func saveUserData(username: String, email: String) {
         // MARK: тут раскомментить если с акканутом
-        guard !username.isEmpty, !email.isEmpty else {
-            print("Incomplete data for saving")
-            return
-        }
-        
-        let actionCodeSettings = ActionCodeSettings()
-        actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
-        actionCodeSettings.handleCodeInApp = true
-        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
-        
-        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
-            if let error = error {
-                print("Error sending email link: \(error.localizedDescription)")
-                return
-            }
-            
-            print("Verification email link sent to \(email)")
-            UserDefaults.standard.set(email, forKey: "pendingEmail")
-            
-            self.db.collection("pending_users").document(email).setData([
-                "username": username,
-                "email": email,
-                "type": "student"
-            ]) { err in
-                if let err = err {
-                    print("Error saving pending user: \(err.localizedDescription)")
-                } else {
-                    print("Pending user data saved")
-                }
-            }
-        }
-        return
-// MARK: тут раскомментить если без аккаунта
-//        Auth.auth().signIn(withEmail: email, password: "123456") {
-//            authResult, error in
+//        guard !username.isEmpty, !email.isEmpty else {
+//            print("Incomplete data for saving")
+//            return
+//        }
+//        
+//        let actionCodeSettings = ActionCodeSettings()
+//        actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
+//        actionCodeSettings.handleCodeInApp = true
+//        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+//        
+//        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
 //            if let error = error {
-//                print("Assistant sign in failed: \(error.localizedDescription)")
+//                print("Error sending email link: \(error.localizedDescription)")
 //                return
 //            }
 //            
-//            guard let user = authResult?.user else {
-//                return
-//            }
+//            print("Verification email link sent to \(email)")
+//            UserDefaults.standard.set(email, forKey: "pendingEmail")
 //            
-//            let uid = user.uid
-//            let db = Firestore.firestore()
-//            
-//            db.collection("users").document(uid).getDocument {
-//                document, error in
-//                if let data = document?.data(), data["type"] as? String == "student" {
-//                    // TODO: роутинг на студента
-//                    self.routingToAssistantLoggedIn()
-//                    print("Student signed in")
+//            self.db.collection("pending_users").document(email).setData([
+//                "username": username,
+//                "email": email,
+//                "type": "student"
+//            ]) { err in
+//                if let err = err {
+//                    print("Error saving pending user: \(err.localizedDescription)")
 //                } else {
-//                    print("Not a student")
+//                    print("Pending user data saved")
 //                }
 //            }
 //        }
+//        return
+// MARK: тут раскомментить если без аккаунта
+        Auth.auth().signIn(withEmail: email, password: "123456") {
+            authResult, error in
+            if let error = error {
+                print("Assistant sign in failed: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let user = authResult?.user else {
+                return
+            }
+            
+            let uid = user.uid
+            let db = Firestore.firestore()
+            
+            db.collection("users").document(uid).getDocument {
+                document, error in
+                if let data = document?.data(), data["type"] as? String == "student" {
+                    // TODO: роутинг на студента
+                    self.routingToAssistantLoggedIn()
+                    print("Student signed in")
+                } else {
+                    print("Not a student")
+                }
+            }
+        }
 }
     
     func handleSignIn(email: String, link: String, completion: @escaping (Bool) -> Void) {
