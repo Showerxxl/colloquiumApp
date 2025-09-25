@@ -105,7 +105,7 @@ extension OverviewViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ t: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("didSelectRowAt: \(indexPath.row)")
-//        t.deselectRow(at: indexPath, animated: true)
-//        interactor?.selectQuestion(index: indexPath.row)
+        t.deselectRow(at: indexPath, animated: true)
+        interactor?.selectQuestion(index: indexPath.row)
     }
 }

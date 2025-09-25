@@ -127,11 +127,17 @@ import Foundation
 
 protocol TestInteractorInput {
     func loadTest()
+    func selectQuestion(index: Int)
+    func goNext()
+    func goBack()
+    func saveAnswer(questionId: String, textAnswer: String?, optionId: String?)
 }
 
 protocol TestInteractorOutput {
     func didLoad(state: TestState)
     func didFailLoad(error: Error)
+    func shouldNavigateToQuestion(index: Int, state: TestState)
+    func didSaveAnswer(state: TestState, for questionId: String)
 }
 
 final class TestInteractor: TestInteractorInput {
@@ -168,6 +174,35 @@ final class TestInteractor: TestInteractorInput {
                 self.output?.didFailLoad(error: err)
             }
         }
+    }
+    
+    func selectQuestion(index: Int) {
+        print("Interactor.selectQuestion index:", index)
+        guard let t = test, t.questions.indices.contains(index) else { return }
+        currentIndex = index
+        
+        let state = makeState()
+        output?.didLoad(state: state) // Обновляем состояние
+        output?.shouldNavigateToQuestion(index: index, state: state) // Инициируем навигацию
+    }
+    
+    func goNext() {
+        guard let t = test else { return }
+        currentIndex = min(t.questions.count - 1, currentIndex + 1)
+        output?.didLoad(state: makeState())
+    }
+    
+    func goBack() {
+        guard let t = test else { return }
+        currentIndex = max(0, currentIndex - 1)
+        output?.didLoad(state: makeState())
+    }
+    
+    
+    func saveAnswer(questionId: String, textAnswer: String?, optionId: String?) {
+        if let txt = textAnswer { answersText[questionId] = txt }
+        if let opt = optionId { answersOption[questionId] = opt }
+        output?.didSaveAnswer(state: makeState(), for: questionId)
     }
     
     private func makeState() -> TestState {

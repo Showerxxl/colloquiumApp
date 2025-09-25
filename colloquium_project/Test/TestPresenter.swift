@@ -174,6 +174,7 @@ import UIKit
 //}
 
 import UIKit
+import QuartzCore
 
 final class TestPresenter: TestInteractorOutput {
     // Две слабые ссылки на разные экраны
@@ -194,26 +195,8 @@ final class TestPresenter: TestInteractorOutput {
     // Interactor -> Presenter
     func didLoad(state: TestState) {
         print("Presenter.didLoad currentIndex:", state.currentIndex, "lastHandledIndex:", lastHandledIndex as Any)
-        
-        // Если мы на Overview и индекс сменился — роутим на вопрос
-//        if overviewVC != nil, lastHandledIndex != state.currentIndex {
-//            routeToQuestion(at: state.currentIndex, using: state)
-//            lastHandledIndex = state.currentIndex
-//            return
-//        }
-        
-        // Обновляем Overview (если он на экране)
-        if let overview = overviewVC {
-            overview.displayOverview(
-                title: state.test.title,
-                questions: state.test.questions.map { $0.title },
-                remainingSeconds: state.remainingSeconds
-            )
-            startTimer(remainingSeconds: state.remainingSeconds)
-            return
-        }
-        
-        // Обновляем Question (если он на экране)
+
+        // 1) Если сейчас показываем вопрос — обновляем вопрос
         if let qvc = questionVC {
             let idx = state.currentIndex
             guard state.test.questions.indices.contains(idx) else { return }
@@ -227,15 +210,28 @@ final class TestPresenter: TestInteractorOutput {
                 index: idx,
                 total: state.test.questions.count,
                 existingText: state.answersText[q.id],
-                selectedOptionId: state.answersOption[q.id]
+                selectedOptionId: state.answersOption[q.id],
+                isBackEnabled: idx > 0,
+                isNextEnabled: idx < state.test.questions.count - 1
             )
             qvc.displayQuestion(vm)
             lastHandledIndex = idx
             return
         }
 
-        // Если ни один экран не привязан — ничего не делаем (assembly должен привязать overviewVC)
-        // Можно оставить пусто; нежелательно самовольно создавать контроллеры здесь.
+        // 2) Иначе — обновляем Overview
+        if let overview = overviewVC {
+            overview.displayOverview(
+                title: state.test.title,
+                questions: state.test.questions.map { $0.title },
+                remainingSeconds: state.remainingSeconds
+            )
+            startTimer(remainingSeconds: state.remainingSeconds)
+            if lastHandledIndex == nil { lastHandledIndex = state.currentIndex }
+            return
+        }
+
+        // 3) Иначе — ничего (assembly должен привязать overviewVC)
     }
     
     func didFailLoad(error: Error) {
@@ -273,7 +269,9 @@ final class TestPresenter: TestInteractorOutput {
             index: index,
             total: state.test.questions.count,
             existingText: state.answersText[q.id],
-            selectedOptionId: state.answersOption[q.id]
+            selectedOptionId: state.answersOption[q.id],
+            isBackEnabled: index > 0,
+            isNextEnabled: index < state.test.questions.count - 1
         )
         qvc.displayQuestion(vm)
         lastHandledIndex = index
@@ -281,6 +279,35 @@ final class TestPresenter: TestInteractorOutput {
     
     func shouldNavigateToQuestion(index: Int, state: TestState) {
         routeToQuestion(at: index, using: state)
+    }
+    
+    func didSaveAnswer(state: TestState, for questionId: String) {
+        // refresh overview if visible
+        if let overview = overviewVC {
+            overview.displayOverview(title: state.test.title,
+                                     questions: state.test.questions.map { $0.title },
+                                     remainingSeconds: state.remainingSeconds)
+        }
+        // if currently on question, update it using state
+        if let qvc = questionVC {
+            let idx = state.currentIndex
+            guard state.test.questions.indices.contains(idx) else { return }
+            let q = state.test.questions[idx]
+            let vm = QuestionViewModel(
+                id: q.id,
+                title: q.title,
+                type: q.type,
+                options: q.options,
+                minSymbols: q.minSymbols,
+                index: idx,
+                total: state.test.questions.count,
+                existingText: state.answersText[q.id],
+                selectedOptionId: state.answersOption[q.id],
+                isBackEnabled: idx > 0,
+                isNextEnabled: idx < state.test.questions.count - 1
+            )
+            qvc.displayQuestion(vm)
+        }
     }
     
     // Таймер
@@ -291,10 +318,12 @@ final class TestPresenter: TestInteractorOutput {
             self?.tick()
         }
     }
+    
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
+    
     private func tick() {
         guard let end = endDate else { return }
         let remaining = max(0, Int(end.timeIntervalSinceNow))

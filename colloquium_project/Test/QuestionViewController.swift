@@ -12,15 +12,21 @@ final class QuestionViewController: UIViewController {
     private let titleLabel = UILabel()
     private let textView = UITextView()
     private let optionsStack = UIStackView()
+    private var didAppearOnce = false
 
     // VIEW -> INTERACTOR only
     var interactor: TestInteractorInput?
 
     private var currentVM: QuestionViewModel?
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        didAppearOnce = true
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor(hex: "FFDEF9")
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Next",
@@ -34,6 +40,7 @@ final class QuestionViewController: UIViewController {
             target: self,
             action: #selector(backTapped)
         )
+        setupUI()
     }
 
     private func setupUI() {
@@ -46,8 +53,6 @@ final class QuestionViewController: UIViewController {
 
         optionsStack.axis = .vertical
         optionsStack.spacing = 8
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextTapped))
 
         let sv = UIStackView(arrangedSubviews: [titleLabel, textView, optionsStack])
         sv.axis = .vertical
@@ -64,8 +69,48 @@ final class QuestionViewController: UIViewController {
 
     // Presenter calls this method to populate view (no protocol)
     func displayQuestion(_ vm: QuestionViewModel) {
+        let previousIndex = currentVM?.index ?? vm.index
+        let dir: CGFloat = vm.index > previousIndex ? 1 : -1
+
+        if didAppearOnce {
+            animateSwap(direction: dir) { [weak self] in
+                self?.apply(vm) // вынеси логику заполнения в отдельный метод apply(_:)
+            }
+        } else {
+            apply(vm)
+        }
         currentVM = vm
+    }
+    
+    private func animateSwap(direction: CGFloat, _ updates: @escaping () -> Void) {
+        // direction: +1 = Next (влево), -1 = Back (вправо)
+        let dx: CGFloat = 24 * direction
+        let group = UIStackView(arrangedSubviews: []) // просто контейнер для кода ниже
+        let targets = [titleLabel, textView, optionsStack]
+
+        // исходное состояние
+        targets.forEach {
+            $0.alpha = 0
+            $0.transform = CGAffineTransform(translationX: dx, y: 0)
+        }
+
+        updates() // перестроили текст/опции
+
+        UIView.animate(withDuration: 0.22,
+                       delay: 0,
+                       options: [.curveEaseInOut, .allowAnimatedContent],
+                       animations: {
+            targets.forEach {
+                $0.alpha = 1
+                $0.transform = .identity
+            }
+        })
+    }
+    
+    private func apply(_ vm: QuestionViewModel) {
         titleLabel.text = "\(vm.index + 1)/\(vm.total). " + vm.title
+        navigationItem.leftBarButtonItem?.isEnabled  = vm.isBackEnabled
+        navigationItem.rightBarButtonItem?.isEnabled = vm.isNextEnabled
         if vm.type == .open {
             textView.isHidden = false
             optionsStack.isHidden = true
@@ -95,31 +140,30 @@ final class QuestionViewController: UIViewController {
     }
 
     @objc private func optionTapped(_ sender: UIButton) {
-//        guard let vm = currentVM else { return }
-//        guard let opt = vm.options.first(where: { $0.id.hashValue == sender.tag }) else { return }
-//        // View calls interactor to save answer
-//        interactor?.saveAnswer(questionId: vm.id, textAnswer: nil, optionId: opt.id)
-//        // Update UI highlight
-//        for case let b as UIButton in optionsStack.arrangedSubviews { b.backgroundColor = (b.tag == sender.tag) ? UIColor.systemGray5 : .clear }
+        guard let vm = currentVM else { return }
+        guard let opt = vm.options.first(where: { $0.id.hashValue == sender.tag }) else { return }
+        // View calls interactor to save answer
+        interactor?.saveAnswer(questionId: vm.id, textAnswer: nil, optionId: opt.id)
+        // Update UI highlight
+        for case let b as UIButton in optionsStack.arrangedSubviews { b.backgroundColor = (b.tag == sender.tag) ? UIColor.systemGray5 : .clear }
     }
 
     @objc private func nextTapped() {
-//        guard let vm = currentVM else { return }
-//        if vm.type == .open {
-//            let txt = textView.text ?? ""
-//            if txt.count < vm.minSymbols {
-//                let a = UIAlertController(title: "Too short", message: "Минимум символов: \(vm.minSymbols)", preferredStyle: .alert)
-//                a.addAction(UIAlertAction(title: "OK", style: .default))
-//                present(a, animated: true)
-//                // ❌ не делаем return
-//            } else {
-//                interactor?.saveAnswer(questionId: vm.id, textAnswer: txt, optionId: nil)
-//            }
-//        }
-//        interactor?.goNext()
+        guard let vm = currentVM else { return }
+        if vm.type == .open {
+            let txt = textView.text ?? ""
+            if txt.count < vm.minSymbols {
+                let a = UIAlertController(title: "Too short", message: "Минимум символов: \(vm.minSymbols)", preferredStyle: .alert)
+                a.addAction(UIAlertAction(title: "OK", style: .default))
+                present(a, animated: true)
+            } else {
+                interactor?.saveAnswer(questionId: vm.id, textAnswer: txt, optionId: nil)
+            }
+        }
+        interactor?.goNext()
     }
     
     @objc private func backTapped() {
-//        interactor?.goBack()
+        interactor?.goBack()
     }
 }
