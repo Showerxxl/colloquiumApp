@@ -1,5 +1,5 @@
 //
-//  AssistantCustomCell.swift
+//  AssistantAssesmentCustomCell.swift
 //  colloquium_project
 //
 //  Created by лизо4ка курунок on 19.09.2025.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class AssistantCustomCell: UITableViewCell {
+final class AssistantAssesmentCustomCell: UITableViewCell {
     
-    static let identifier = "AssistantCustomCell"
+    static let identifier = "AssistantAssesmentCustomCell"
     
     private let titleLabel: UILabel = {
         let label = UILabel()

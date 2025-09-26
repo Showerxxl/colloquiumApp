@@ -9,4 +9,9 @@ import Foundation
 
 final class ChooseStudentsPresenter: ChooseStudentsPresentationLogic {
     weak var view: ChooseStudentsViewController?
+    
+    func routingToAssistantAssesment() {
+        let vc = AssistantAssesmentBuilder.build()
+        view?.navigationController?.pushViewController(vc, animated: true)
+    }
 }

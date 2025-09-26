@@ -16,13 +16,7 @@ final class AssistantAccountPresenter: AssistantAccountPresentationLogic {
     }
     
     func routingToAuth() {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
-            let vc = RootAuthModuleBuilder.build()
-            
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                window.rootViewController = vc
-            }, completion: nil)
-        }
+        let vc = RootAuthModuleBuilder.build()
+        view?.navigationController?.setViewControllers([vc], animated: true)
     }
 }

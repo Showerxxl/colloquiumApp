@@ -15,4 +15,8 @@ final class ChooseStudentsInteractor: ChooseStudentsInteractionLogic {
     init(presenter: ChooseStudentsPresentationLogic) {
         self.presenter = presenter
     }
+    
+    func routingToAssistantAssesment() {
+        presenter.routingToAssistantAssesment()
+    }
 }

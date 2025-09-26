@@ -61,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             interactor.handleSignIn(email: email, link: link) { success in
                 if success {
                 // TODO: вот тут должно открываться что-то связанное со студентом, но пока этого нет и открывается ассистентсво
-                    self.window?.rootViewController = AssistantBuilder.build()
+                    self.window?.rootViewController = AssistantStartBuilder.build()
                 } else {
                     print("Failed to sign in")
                 }

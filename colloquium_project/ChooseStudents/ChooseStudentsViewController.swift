@@ -94,7 +94,8 @@ final class ChooseStudentsViewController: UIViewController {
     
     @objc
     private func startButtonTapped() {
-        
+        // TODO: send info to firebase somehow
+        interactor.routingToAssistantAssesment()
     }
 }
 

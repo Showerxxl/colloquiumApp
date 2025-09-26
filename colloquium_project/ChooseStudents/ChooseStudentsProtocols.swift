@@ -9,7 +9,9 @@ import Foundation
 import FirebaseFirestore
 
 protocol ChooseStudentsPresentationLogic {
+    func routingToAssistantAssesment()
 }
 
 protocol ChooseStudentsInteractionLogic {
+    func routingToAssistantAssesment()
 }
