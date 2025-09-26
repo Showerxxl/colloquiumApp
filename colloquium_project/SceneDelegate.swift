@@ -12,16 +12,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
         if Auth.auth().currentUser != nil {
+//            // TODO: вот тут добавить проверку студент или ассистент когда появится опция студента
             let windowController = AssistantStartBuilder.build()
-//            let windowController = RootAuthModuleBuilder.build()
             let navigationController = UINavigationController(rootViewController: windowController)
             window.rootViewController = navigationController
-//            // TODO: вот тут добавить проверку студент или ассистент когда появится опция студента
-//            let windowController = AssistantBuilder.build()
-//            let navigationController = UINavigationController(rootViewController: windowController)
-//            window.rootViewController = navigationController
         } else {
-            let windowController = AssistantStartBuilder.build()
+            let windowController = RootAuthModuleBuilder.build()
             let navigationController = UINavigationController(rootViewController: windowController)
             window.rootViewController = navigationController
         }
@@ -65,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             interactor.handleSignIn(email: email, link: link) { success in
                 if success {
                 // TODO: вот тут должно открываться что-то связанное со студентом, но пока этого нет и открывается ассистентсво
-                    self.window?.rootViewController = AssistantBuilder.build()
+                    self.window?.rootViewController = AssistantStartBuilder.build()
                 } else {
                     print("Failed to sign in")
                 }

@@ -34,25 +34,15 @@ final class AssistantAuthInteractor: AssistantAuthInteractionLogic {
             db.collection("users").document(uid).getDocument {
                 document, error in
                 if let data = document?.data(), data["type"] as? String == "assistant" {
-                    self.routingToAssistantLoggedIn()
+                    if let username = data["username"] as? String {
+                        UserDefaults.standard.set(username, forKey: "username")
+                        UserDefaults.standard.set(email, forKey: "email")
+                    }
+                    self.presenter.routingToAssistantStart()
                     print("Assistant signed in")
                 } else {
                     print("Not an assistant")
                 }
-            }
-        }
-    }
-    
-    private func routingToAssistantLoggedIn() {
-        DispatchQueue.main.async {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first {
-                
-                let view = AssistantStartBuilder.build()
-                
-                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                    window.rootViewController = view
-                }, completion: nil)
             }
         }
     }

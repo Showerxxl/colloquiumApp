@@ -171,6 +171,18 @@ extension UIView {
     func setWidth(mode: ConstraintMode = .equal, _ const: Double) -> NSLayoutConstraint {
         pinDimension(mode: mode, widthAnchor, constant: const)
     }
+    
+    @discardableResult
+    func setWidthRelativeToScreen(multiplier: CGFloat = 0.5) -> NSLayoutConstraint {
+        guard let superview = self.superview else {
+            fatalError("Superview is required for relative width")
+        }
+        
+        let constraint = widthAnchor.constraint(equalTo: superview.widthAnchor, multiplier: multiplier)
+        constraint.isActive = true
+        return constraint
+    }
+
 
     // MARK: - Pin height
     @discardableResult

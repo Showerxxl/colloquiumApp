@@ -134,7 +134,7 @@ final class AssistantAuthViewController: UIViewController {
     private func setUpLoginButton() {
         view.addSubview(loginButton)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.setTitle("Login", for: .normal)
+        loginButton.setTitle("Войти", for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
         loginButton.setTitleColor(.black, for: .normal)
         loginButton.backgroundColor = Constants.Color.primary
@@ -150,6 +150,7 @@ final class AssistantAuthViewController: UIViewController {
     private func loginButtonPressed() {
         guard let email = mailTextField.text, let password = passwordTextField.text, !email.isEmpty, !password.isEmpty else {
             // TODO: выводим на экран сообщение о том, что надо заполнить данные
+            // TODO: заблокировать кнопку после нажатия 
             return
         }
         interactor.SendUserData(email: email, password: password)

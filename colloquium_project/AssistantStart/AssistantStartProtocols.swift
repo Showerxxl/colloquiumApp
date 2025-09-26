@@ -8,9 +8,13 @@
 import Foundation
 
 protocol AssistantStartPresentationLogic {
-    
+    func routingToAssistantAccount()
+    func routingToChooseStudents(students: [Student])
+    func routingToAssesment()
 }
 
 protocol AssistantStartInteractionLogic {
-    
+    func routingToAssistantAccount()
+    func routingToChooseStudents()
+    func routingToAssesment()
 }

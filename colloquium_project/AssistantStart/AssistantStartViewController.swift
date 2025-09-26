@@ -32,6 +32,7 @@ final class AssistantStartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.hidesBackButton = true
         configureUI()
     }
     
@@ -57,7 +58,7 @@ final class AssistantStartViewController: UIViewController {
     
     @objc
     private func accountButtonTapped() {
-        // TODO: rounting to assistant account 
+        interactor.routingToAssistantAccount()
     }
     
     private func configureListLabel() {
@@ -79,7 +80,7 @@ final class AssistantStartViewController: UIViewController {
         startButton.setTitle("Начать тестирование", for: .normal)
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         
-        startButton.layer.cornerRadius = 12
+        startButton.layer.cornerRadius = 20
         startButton.layer.masksToBounds = true
         
         view.addSubview(startButton)
@@ -93,7 +94,7 @@ final class AssistantStartViewController: UIViewController {
     
     @objc
     private func startButtonTapped() {
-        // TODO: touting to thr screen with students list
+        interactor.routingToChooseStudents()
     }
     
     private func configureTableView() {
@@ -151,8 +152,6 @@ extension AssistantStartViewController: UITableViewDelegate, UITableViewDataSour
         tableView.deselectRow(at: indexPath, animated: true)
         
         let student = items[indexPath.section]
-        // TODO: routing to screen with list of students' works
-        let vc = StudentWorkViewController(studentName: student.title)
-        navigationController?.pushViewController(vc, animated: true)
+        interactor.routingToAssesment()
     }
 }
