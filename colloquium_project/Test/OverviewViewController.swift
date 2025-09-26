@@ -75,7 +75,7 @@ final class OverviewViewController: UIViewController {
     }
 
     @objc private func finishTapped() {
-//        interactor?.finishTest()
+        interactor?.finishTest()
         print("Finish tapped")
     }
 

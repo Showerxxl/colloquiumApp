@@ -131,6 +131,7 @@ protocol TestInteractorInput {
     func goNext()
     func goBack()
     func saveAnswer(questionId: String, textAnswer: String?, optionId: String?)
+    func finishTest()
 }
 
 protocol TestInteractorOutput {
@@ -203,6 +204,17 @@ final class TestInteractor: TestInteractorInput {
         if let txt = textAnswer { answersText[questionId] = txt }
         if let opt = optionId { answersOption[questionId] = opt }
         output?.didSaveAnswer(state: makeState(), for: questionId)
+    }
+    
+    func finishTest() {
+        guard let t = test else { return }
+        var results: [String: Any] = [:]
+        for q in t.questions {
+            results[q.id] = (q.type == .open) ? (answersText[q.id] ?? "") : (answersOption[q.id] ?? "")
+        }
+        print("=== MOCK FINISH RESULTS ===")
+        print(results)
+        output?.didLoad(state: makeState())
     }
     
     private func makeState() -> TestState {

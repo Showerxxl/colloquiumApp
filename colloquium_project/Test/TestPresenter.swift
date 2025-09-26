@@ -174,7 +174,6 @@ import UIKit
 //}
 
 import UIKit
-import QuartzCore
 
 final class TestPresenter: TestInteractorOutput {
     // Две слабые ссылки на разные экраны
@@ -215,6 +214,7 @@ final class TestPresenter: TestInteractorOutput {
                 isNextEnabled: idx < state.test.questions.count - 1
             )
             qvc.displayQuestion(vm)
+            qvc.updateTimer(remaining: state.remainingSeconds)
             lastHandledIndex = idx
             return
         }
@@ -274,6 +274,7 @@ final class TestPresenter: TestInteractorOutput {
             isNextEnabled: index < state.test.questions.count - 1
         )
         qvc.displayQuestion(vm)
+        qvc.updateTimer(remaining: state.remainingSeconds)
         lastHandledIndex = index
     }
     
@@ -328,6 +329,7 @@ final class TestPresenter: TestInteractorOutput {
         guard let end = endDate else { return }
         let remaining = max(0, Int(end.timeIntervalSinceNow))
         overviewVC?.updateTimer(remaining: remaining)
+        questionVC?.updateTimer(remaining: remaining)
         if remaining == 0 {
             // optionally notify interactor to finish if desired
         }
