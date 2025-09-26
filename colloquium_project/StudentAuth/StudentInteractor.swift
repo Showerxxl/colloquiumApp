@@ -23,7 +23,7 @@ class StudentInteractor: StudentInteractorProtocol {
         let actionCodeSettings = ActionCodeSettings()
         actionCodeSettings.url = URL(string: "https://ios-colloquium.web.app/verify")
         actionCodeSettings.handleCodeInApp = true
-        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier ?? "")
         
         Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings) { error in
             if let error = error {

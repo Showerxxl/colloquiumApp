@@ -59,4 +59,8 @@ final class AssistantStartInteractor: AssistantStartInteractionLogic {
                 completion(students, nil)
             }
     }
+    
+    func routingToAssesment() {
+        presenter.routingToAssesment()
+    }
 }

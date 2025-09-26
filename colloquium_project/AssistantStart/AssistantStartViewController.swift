@@ -152,8 +152,6 @@ extension AssistantStartViewController: UITableViewDelegate, UITableViewDataSour
         tableView.deselectRow(at: indexPath, animated: true)
         
         let student = items[indexPath.section]
-        // TODO: routing to screen with list of students' works
-        let vc = StudentWorkViewController(studentName: student.title)
-        navigationController?.pushViewController(vc, animated: true)
+        interactor.routingToAssesment()
     }
 }

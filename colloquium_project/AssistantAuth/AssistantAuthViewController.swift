@@ -150,6 +150,7 @@ final class AssistantAuthViewController: UIViewController {
     private func loginButtonPressed() {
         guard let email = mailTextField.text, let password = passwordTextField.text, !email.isEmpty, !password.isEmpty else {
             // TODO: выводим на экран сообщение о том, что надо заполнить данные
+            // TODO: заблокировать кнопку после нажатия 
             return
         }
         interactor.SendUserData(email: email, password: password)

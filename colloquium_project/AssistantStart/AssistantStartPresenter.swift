@@ -19,4 +19,9 @@ final class AssistantStartPresenter: AssistantStartPresentationLogic {
         let vc = ChooseStudentsBuilder.build(students: students)
         view?.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func routingToAssesment() {
+        let vc = AssesmentBuilder.build()
+        view?.navigationController?.pushViewController(vc, animated: true)
+    }
 }
