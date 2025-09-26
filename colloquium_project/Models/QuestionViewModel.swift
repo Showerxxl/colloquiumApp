@@ -15,4 +15,6 @@ struct QuestionViewModel {
     let total: Int
     let existingText: String?
     let selectedOptionId: String?
+    let isBackEnabled: Bool
+    let isNextEnabled: Bool
 }

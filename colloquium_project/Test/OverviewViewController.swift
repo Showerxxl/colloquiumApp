@@ -15,11 +15,21 @@ final class OverviewViewController: UIViewController {
     var interactor: TestInteractorInput?
 
     private var questionTitles: [String] = []
+    
+    private let finishButton: UIButton = {
+        let b = UIButton(type: .system)
+        
+        b.setTitle("Завершить", for: .normal)
+        b.tintColor = .white
+        b.backgroundColor = .red
+        b.layer.cornerRadius = 18
+        b.titleLabel?.font = .systemFont(ofSize: 23, weight: .regular)
+        return b
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        title = "Test"
+        view.backgroundColor = UIColor(hex: "FFDEF9")
         setupUI()
         // debug helpers:
         table.isUserInteractionEnabled = true
@@ -30,49 +40,56 @@ final class OverviewViewController: UIViewController {
     }
 
     private func setupUI() {
-        timerLabel.font = .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+        timerLabel.font = UIFont.systemFont(ofSize: 28)
         timerLabel.textAlignment = .center
+        
+        finishButton.setWidth(149)
+        finishButton.setHeight(40)
+        finishButton.layer.cornerRadius = 20
+        finishButton.addTarget(self, action: #selector(finishTapped), for: .touchUpInside)
 
         table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         table.dataSource = self
         table.delegate = self
+        table.layer.cornerRadius = 20
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Finish", style: .done, target: self, action: #selector(finishTapped))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Finish", style: .done, target: self, action: #selector(finishTapped))
 
-        [timerLabel, table].forEach {
+        [timerLabel, finishButton, table].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
 
         NSLayoutConstraint.activate([
-            timerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            timerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
-            timerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
+            timerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 78),
+            timerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            
+            finishButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 73),
+            finishButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            table.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 8),
-            table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            table.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            table.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            table.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 28),
+            table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50)
         ])
     }
 
     @objc private func finishTapped() {
         interactor?.finishTest()
+        print("Finish tapped")
     }
 
     // Methods Presenter calls directly on the concrete view (no protocol)
     func displayOverview(title: String, questions: [String], remainingSeconds: Int) {
-        self.title = title
         self.questionTitles = questions
         table.reloadData()
         updateTimer(remaining: remainingSeconds)
     }
 
     func updateTimer(remaining: Int) {
-        let h = remaining / 3600
         let m = (remaining % 3600) / 60
         let s = remaining % 60
-        timerLabel.text = String(format: "Осталось: %02d:%02d:%02d", h, m, s)
+        timerLabel.text = String(format: "%02d:%02d", m, s)
     }
 }
 
