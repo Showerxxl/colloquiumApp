@@ -93,7 +93,7 @@ extension StudentWorkViewController: UITableViewDelegate, UITableViewDataSource 
         tableView.deselectRow(at: indexPath, animated: true)
         
         let item = questions[indexPath.row]
-        let vc = AnswerViewController(question: item, answer: "Вот тут будет ответ студента, когда у нас будет сервер", numberOfQuestion: indexPath.row)
+        let vc = AnswerViewController(question: item, answer: "Вот тут будет ответ студента, когда мы разберемся с базой данных", numberOfQuestion: indexPath.row)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

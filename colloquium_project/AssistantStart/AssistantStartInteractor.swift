@@ -60,7 +60,7 @@ final class AssistantStartInteractor: AssistantStartInteractionLogic {
             }
     }
     
-    func routingToAssesment() {
-        presenter.routingToAssesment()
+    func routingToAssesment(title: String, date: String) {
+        presenter.routingToAssesment(title: title, date: date)
     }
 }

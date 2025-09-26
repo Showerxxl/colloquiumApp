@@ -20,8 +20,8 @@ final class AssistantStartPresenter: AssistantStartPresentationLogic {
         view?.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func routingToAssesment() {
-        let vc = AssesmentBuilder.build()
+    func routingToAssesment(title: String, date: String) {
+        let vc = AssesmentBuilder.build(title: title, date: date)
         view?.navigationController?.pushViewController(vc, animated: true)
     }
 }

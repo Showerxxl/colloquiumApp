@@ -8,7 +8,9 @@
 import Foundation
 
 protocol AssesmentPresentationLogic {
+    func showData(title: String, date: String, students: [Student : Int?])
 }
 
 protocol AssesmentInteractionLogic {
+    func getData()
 }

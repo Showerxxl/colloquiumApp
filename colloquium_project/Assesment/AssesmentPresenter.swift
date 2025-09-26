@@ -10,4 +10,8 @@ import Foundation
 final class AssesmentPresenter: AssesmentPresentationLogic {
     
     weak var view: AssesmentViewController?
+    
+    func showData(title: String, date: String, students: [Student : Int?]) {
+        view?.loadData(title: title, date: date, students: students)
+    }
 }
