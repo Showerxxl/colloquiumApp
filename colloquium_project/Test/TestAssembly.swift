@@ -9,7 +9,7 @@ import UIKit
 
 enum TestAssembly {
     static func assembly() -> UIViewController {
-        let service = MockTestService()
+        let service: TestServiceProtocol = FirebaseTestService()
         let worker = TestWorker(service: service)
         let presenter = TestPresenter()
         let interactor = TestInteractor(worker: worker, output: presenter)
