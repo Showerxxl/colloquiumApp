@@ -95,7 +95,25 @@ final class ChooseStudentsViewController: UIViewController {
     @objc
     private func startButtonTapped() {
         // TODO: send info to firebase somehow
+        if selectedStudents.isEmpty {
+            buttonTapped()
+            return
+        }
         interactor.routingToAssistantAssesment()
+    }
+    
+    @IBAction
+    private func buttonTapped() {
+        let alert = UIAlertController(
+            title: "Внимание",
+            message: "Выберите хотя бы одного студента",
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(title: "Ок", style: .default)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true)
     }
 }
 
