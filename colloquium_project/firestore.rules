@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Коллоквиумы - публичное чтение для авторизованных пользователей
+    match /colloquia/{colId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Изменение только через админ-панель
+      
+      match /questions/{qId} {
+        allow read: if request.auth != null;
+        allow write: if false;
+      }
+    }
+    
+    // Ответы пользователей
+    match /submissions/{submissionId} {
+      // Создание - только авторизованные пользователи для своих submission
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.colloquiumId is string
+        && request.resource.data.answers is map;
+      
+      // Чтение и обновление - только владелец submission
+      allow read, update: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+      
+      // Удаление запрещено
+      allow delete: if false;
+    }
+    
+    // Пользователи могут читать свои профили
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

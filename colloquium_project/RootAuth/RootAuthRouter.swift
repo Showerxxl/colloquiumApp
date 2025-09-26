@@ -1,5 +1,6 @@
 import UIKit
 import SwiftData
+import SwiftUI
 
 class RootAuthRouter: RootAuthRouterProtocol {
    
@@ -14,7 +15,17 @@ class RootAuthRouter: RootAuthRouterProtocol {
     }
     
     func createAssistantViewController() -> UIViewController {
-        return AssistantAuthBuilder.build()
+        print("AAAAAAA - Тестируем AutoGradingTestView")
+        
+        // Временно возвращаем AutoGradingTestView для тестирования
+        let autoGradingView = AutoGradingTestView()
+        let hostingController = UIHostingController(rootView: autoGradingView)
+        hostingController.title = "Тест автопроверки"
+        
+        return hostingController
+        
+        // Оригинальный код (закомментирован для тестирования):
+        // return AssistantAuthBuilder.build()
     }
     
     func switchToViewController(from fromVC: UIViewController?, to toVC: UIViewController, role: Role, in container: UIView, completion: @escaping () -> Void) {

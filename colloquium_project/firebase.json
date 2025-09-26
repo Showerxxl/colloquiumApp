@@ -1,4 +1,8 @@
 {
+  "functions": {
+    "source": "../functions",
+    "runtime": "nodejs18"
+  },
   "hosting": {
     "public": "public",
     "ignore": [
@@ -12,5 +16,9 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }

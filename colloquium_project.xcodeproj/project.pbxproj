@@ -438,7 +438,7 @@
 				CODE_SIGN_ENTITLEMENTS = colloquium_project/colloquium_projectDEV_NO_ACCOUNT.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F46Y9QM766;
+				DEVELOPMENT_TEAM = AX2B57NH5J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = colloquium_project/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera to allow you to take photos for your profile and documents.";
@@ -453,7 +453,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "igor.colloquium-projects";
+				PRODUCT_BUNDLE_IDENTIFIER = igor.colloquium;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
