@@ -4,11 +4,13 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
-class StudentInteractor: StudentInteractorProtocol {
+final class StudentInteractor: StudentInteractorProtocol {
     
     private let db = Firestore.firestore()
+    private let sessionStore: SessionStoring
     
-    init() {
+    init(sessionStore: SessionStoring = UserDefaultsSessionStore()) {
+        self.sessionStore = sessionStore
         print("StudentInteractor initialized with Firebase")
     }
     
@@ -47,33 +49,34 @@ class StudentInteractor: StudentInteractorProtocol {
             }
         }
         return
-// MARK: тут раскомментить если без аккаунта
-//        Auth.auth().signIn(withEmail: email, password: "123456") {
-//            authResult, error in
-//            if let error = error {
-//                print("Assistant sign in failed: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            guard let user = authResult?.user else {
-//                return
-//            }
-//            
-//            let uid = user.uid
-//            let db = Firestore.firestore()
-//            
-//            db.collection("users").document(uid).getDocument {
-//                document, error in
-//                if let data = document?.data(), data["type"] as? String == "student" {
-//                    // TODO: роутинг на студента
-//                    self.routingToAssistantLoggedIn()
-//                    print("Student signed in")
-//                } else {
-//                    print("Not a student")
-//                }
-//            }
-//        }
-}
+        // MARK: тут раскомментить если без аккаунта
+        Auth.auth().signIn(withEmail: email, password: "123456") {
+            authResult, error in
+            if let error = error {
+                print("Assistant sign in failed: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let user = authResult?.user else {
+                return
+            }
+            
+            let uid = user.uid
+            let db = Firestore.firestore()
+            
+            db.collection("users").document(uid).getDocument {
+                document, error in
+                if let data = document?.data(), data["type"] as? String == "student" {
+                    self.finalizeLogin(email: email, role: .student, route: { [weak self] in
+                        self?.routingToStudentLoggedIn()
+                    })
+                    print("Student signed in")
+                } else {
+                    print("Not a student")
+                }
+            }
+        }
+    }
     
     func handleSignIn(email: String, link: String, completion: @escaping (Bool) -> Void) {
         if Auth.auth().isSignIn(withEmailLink: link) {
@@ -106,6 +109,10 @@ class StudentInteractor: StudentInteractorProtocol {
                         } else {
                             print("User \(email) successfully verified and saved with UID \(uid)")
                             self.db.collection("pending_users").document(email).delete()
+                            
+                            let session = UserSession(email: email, role: .student)
+                            self.sessionStore.save(session)
+                            
                             completion(true)
                         }
                     }
@@ -129,5 +136,28 @@ class StudentInteractor: StudentInteractorProtocol {
                 }, completion: nil)
             }
         }
+    }
+    
+    private func routingToStudentLoggedIn() {
+        DispatchQueue.main.async {
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = scene.windows.first else { return }
+
+            let next = StudentColloquiumAssembly.make()
+
+            if let nav = window.rootViewController as? UINavigationController {
+                nav.setViewControllers([next], animated: true)
+            } else {
+                let nav = UINavigationController(rootViewController: next)
+                window.rootViewController = nav
+                window.makeKeyAndVisible()
+            }
+        }
+    }
+    
+    private func finalizeLogin(email: String, role: UserRole, route: @escaping () -> Void) {
+        let session = UserSession(email: email, role: role)
+        sessionStore.save(session)
+        DispatchQueue.main.async { route() }
     }
 }

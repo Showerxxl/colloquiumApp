@@ -11,16 +11,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        if Auth.auth().currentUser != nil {
-//            // TODO: вот тут добавить проверку студент или ассистент когда появится опция студента
-            let windowController = AssistantStartBuilder.build()
-            let navigationController = UINavigationController(rootViewController: windowController)
-            window.rootViewController = navigationController
-        } else {
-            let windowController = RootAuthModuleBuilder.build()
-            let navigationController = UINavigationController(rootViewController: windowController)
-            window.rootViewController = navigationController
-        }
+        let windowController = RootAuthModuleBuilder.build()
+        let navigationController = UINavigationController(rootViewController: windowController)
+        window.rootViewController = navigationController
         
         window.makeKeyAndVisible()
     }

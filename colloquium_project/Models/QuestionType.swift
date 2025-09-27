@@ -9,3 +9,13 @@ enum QuestionType {
     case open
     case singleChoice
 }
+
+extension QuestionType {
+    init?(raw: String) {
+        switch raw.lowercased() {
+        case "open": self = .open
+        case "single", "singlechoice": self = .singleChoice
+        default: return nil
+        }
+    }
+}
