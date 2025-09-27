@@ -7,7 +7,6 @@
 
 import UIKit
 
-// Question VC — has interactor only. Presenter will create and push this VC and then call displayQuestion(...)
 final class QuestionViewController: UIViewController, UITextViewDelegate {
     private let titleLabel = UILabel()
     private let textView = NoPasteTextView()
@@ -71,6 +70,9 @@ final class QuestionViewController: UIViewController, UITextViewDelegate {
         navigationItem.hidesBackButton = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         setupUI()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -407,5 +409,9 @@ final class QuestionViewController: UIViewController, UITextViewDelegate {
         } else {
             navigationController?.popViewController(animated: true)
         }
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
