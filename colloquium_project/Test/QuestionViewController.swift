@@ -10,7 +10,7 @@ import UIKit
 // Question VC — has interactor only. Presenter will create and push this VC and then call displayQuestion(...)
 final class QuestionViewController: UIViewController, UITextViewDelegate {
     private let titleLabel = UILabel()
-    private let textView = UITextView()
+    private let textView = NoPasteTextView()
     private let optionsStack = UIStackView()
     private let timerLabel = UILabel()
     private let placeholderLabel = UILabel()
@@ -203,6 +203,10 @@ final class QuestionViewController: UIViewController, UITextViewDelegate {
         let m = (remaining % 3600) / 60
         let s = remaining % 60
         timerLabel.text = String(format: "%02d:%02d", m, s)
+        
+        if remaining <= 0 {
+            interactor?.finishTest()
+        }
     }
     
     private func animateSwap(direction: CGFloat, _ updates: @escaping () -> Void) {
@@ -229,21 +233,6 @@ final class QuestionViewController: UIViewController, UITextViewDelegate {
             }
         })
     }
-    
-//    private func apply(_ vm: QuestionViewModel) {
-//        titleLabel.text = "\(vm.index + 1)/\(vm.total). " + vm.title
-////        navigationItem.leftBarButtonItem?.isEnabled  = vm.isBackEnabled
-////        navigationItem.rightBarButtonItem?.isEnabled = vm.isNextEnabled
-//        if vm.type == .open {
-//            textView.isHidden = false
-//            optionsStack.isHidden = true
-//            textView.text = vm.existingText ?? ""
-//        } else {
-//            textView.isHidden = true
-//            optionsStack.isHidden = false
-//            buildOptions(vm.options, selected: vm.selectedOptionId)
-//        }
-//    }
     
     private func updatePlaceholderVisibility() {
         let isEmpty = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -287,22 +276,29 @@ final class QuestionViewController: UIViewController, UITextViewDelegate {
     }
 
     private func updateOptionsSelection(selected: String?, animated: Bool) {
-        let update: () -> Void = {
+        let update: () -> Void = { [weak self] in
+            guard let self = self else { return }
             for case let b as UIButton in self.optionsStack.arrangedSubviews {
-                // Мы записывали hashValue в tag — оставим, но лучше хранить id в accessibilityIdentifier
-                let isSelected: Bool
-                if let id = b.accessibilityIdentifier {
-                    isSelected = (id == selected)
-                } else {
-                    // fallback для текущей реализации с tag/hashValue
-                    isSelected = (selected != nil && b.tag == selected!.hashValue)
+                if let sel = selected, let id = b.accessibilityIdentifier {
+                    let isSelected = (id == sel)
+                    b.backgroundColor = isSelected ? UIColor.systemGray5 : .clear
+                    continue
                 }
-                b.backgroundColor = isSelected ? UIColor.systemGray5 : .clear
+
+                if let sel = selected {
+                    let isSelected = (b.tag == sel.hashValue)
+                    b.backgroundColor = isSelected ? UIColor.systemGray5 : .clear
+                } else {
+                    b.backgroundColor = .clear
+                }
             }
         }
-        animated
-            ? UIView.animate(withDuration: 0.15, animations: update)
-            : update()
+
+        if animated {
+            UIView.animate(withDuration: 0.15, animations: update)
+        } else {
+            update()
+        }
     }
 
     private func buildOptions(_ options: [AnswerOption], selected: String?) {

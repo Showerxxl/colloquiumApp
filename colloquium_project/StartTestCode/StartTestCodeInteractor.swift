@@ -14,8 +14,15 @@ protocol StartTestCodeInteractorInput {
 final class StartTestCodeInteractor: StartTestCodeInteractorInput {
     var presenter: StartTestCodeInteractorOutput?
     var worker: StartTestCodeWorkerProtocol?
+    private let codeStore: CodeStoring
+    
+    init(codeStore: CodeStoring = UserDefaultsCodeStore()) {
+        self.codeStore = codeStore
+    }
     
     func onSumbitCode(code: String) {
         print("Interactor code works!")
+        codeStore.save(code: code)
+        presenter?.routeTest()
     }
 }

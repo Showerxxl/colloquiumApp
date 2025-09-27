@@ -143,6 +143,23 @@ final class TestPresenter: TestInteractorOutput {
         }
     }
     
+    func routeMenu() {
+        DispatchQueue.main.async {
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = scene.windows.first else { return }
+
+            let next = StudentColloquiumAssembly.make()
+
+            if let nav = window.rootViewController as? UINavigationController {
+                nav.setViewControllers([next], animated: true)
+            } else {
+                let nav = UINavigationController(rootViewController: next)
+                window.rootViewController = nav
+                window.makeKeyAndVisible()
+            }
+        }
+    }
+    
     // Таймер
     private func startTimer(remainingSeconds: Int) {
         stopTimer()

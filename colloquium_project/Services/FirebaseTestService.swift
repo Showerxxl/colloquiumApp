@@ -56,7 +56,7 @@ final class FirebaseTestService: TestServiceProtocol {
                 }
                 
                 // Берём случайные 10 (или меньше, если в базе меньше)
-                let picked = Array(questions.shuffled().prefix(10))
+                let picked = Array(questions.shuffled().prefix(40))
                 
                 let test = Test(
                     id: self.testId,

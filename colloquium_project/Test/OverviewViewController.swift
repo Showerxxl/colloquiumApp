@@ -38,6 +38,23 @@ final class OverviewViewController: UIViewController {
         print("Overview viewDidLoad — table frame: \(table.frame), superview: \(String(describing: table.superview))")
         interactor?.loadTest()
     }
+    
+    // Methods Presenter calls directly on the concrete view (no protocol)
+    func displayOverview(title: String, questions: [String], remainingSeconds: Int) {
+        self.questionTitles = questions
+        table.reloadData()
+        updateTimer(remaining: remainingSeconds)
+    }
+
+    func updateTimer(remaining: Int) {
+        let m = (remaining % 3600) / 60
+        let s = remaining % 60
+        timerLabel.text = String(format: "%02d:%02d", m, s)
+        
+        if remaining <= 0 {
+            interactor?.finishTest()
+        }
+    }
 
     private func setupUI() {
         timerLabel.font = UIFont.systemFont(ofSize: 28)
@@ -75,21 +92,20 @@ final class OverviewViewController: UIViewController {
     }
 
     @objc private func finishTapped() {
-        interactor?.finishTest()
-        print("Finish tapped")
-    }
-
-    // Methods Presenter calls directly on the concrete view (no protocol)
-    func displayOverview(title: String, questions: [String], remainingSeconds: Int) {
-        self.questionTitles = questions
-        table.reloadData()
-        updateTimer(remaining: remainingSeconds)
-    }
-
-    func updateTimer(remaining: Int) {
-        let m = (remaining % 3600) / 60
-        let s = remaining % 60
-        timerLabel.text = String(format: "%02d:%02d", m, s)
+        if interactor?.hasEmptyAnswers() == true {
+            let alert = UIAlertController(
+                title: "Есть незаполненные ответы",
+                message: "Вы уверены, что хотите завершить тест?",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Завершить", style: .destructive, handler: { [weak self] _ in
+                self?.interactor?.finishTest()
+            }))
+            present(alert, animated: true)
+        } else {
+            interactor?.finishTest()
+        }
     }
 }
 
