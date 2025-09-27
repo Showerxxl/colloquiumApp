@@ -83,7 +83,7 @@ final class AssistantAuthViewController: UIViewController {
         passwordTextField.delegate = self
         
         let attributes2: [NSAttributedString.Key: Any] = [.paragraphStyle: paragraphStyle, .foregroundColor: UIColor(hex: "A8A8A8")]
-        let attributedString2 = NSAttributedString(string: "Password", attributes: attributes2)
+        let attributedString2 = NSAttributedString(string: "Пароль", attributes: attributes2)
         passwordTextField.backgroundColor = .white
         passwordTextField.layer.borderColor = UIColor(hex: "A8A8A8").cgColor
         passwordTextField.attributedPlaceholder = attributedString2

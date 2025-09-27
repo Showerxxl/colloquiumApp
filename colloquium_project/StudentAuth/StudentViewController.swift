@@ -52,6 +52,8 @@ class StudentViewController: UIViewController, StudentViewProtocol, UITextFieldD
         mailTextField.layer.borderColor = UIColor(hex: "A8A8A8").cgColor
         mailTextField.font = UIFont.systemFont(ofSize: 20)
         mailTextField.layer.borderWidth = 1
+        mailTextField.autocorrectionType = .no
+        mailTextField.spellCheckingType = .no
         mailTextField.layer.cornerRadius = 10
         mailTextField.pinRight(to: view, 25)
         mailTextField.pinLeft(to: view, 25)

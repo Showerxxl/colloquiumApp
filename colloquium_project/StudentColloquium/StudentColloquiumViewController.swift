@@ -149,6 +149,14 @@ extension StudentColloquiumViewController: UITableViewDelegate, UITableViewDataS
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        // Позже можно открыть подробности попытки коллоквиума
+        let vm = items[indexPath.section]
+        interactor?.openAttempt(email: vm.email, code: vm.code)
+    }
+}
+
+extension StudentColloquiumViewController {
+    func showAttempt(_ rows: [(title: String, answer: String)]) {
+        let vc = StudentAttemptViewController(rows: rows)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

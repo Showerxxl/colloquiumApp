@@ -16,7 +16,7 @@ final class FirebaseStudentHistoryService: StudentHistoryService {
                 if let err = err { completion(.failure(err)); return }
                 guard let docs = snap?.documents else { completion(.success([])); return }
                 
-                let items: [AttemptDTO] = docs.compactMap { doc in
+                let items: [AttemptDTO] = docs.compactMap { doc -> AttemptDTO? in
                     let data = doc.data()
                     guard
                         let testId = data["testId"] as? String,
@@ -25,13 +25,21 @@ final class FirebaseStudentHistoryService: StudentHistoryService {
                     else { return nil }
                     
                     let createdAt: Date = (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
+
+                    let rawAnswers = (data["answers"] as? [[String: Any]]) ?? []
+                    let answers: [AnswerDTO] = rawAnswers.compactMap { dict -> AnswerDTO? in
+                        guard let qid = dict["questionId"] as? String else { return nil }
+                        let ans = (dict["answer"] as? String) ?? ""
+                        return AnswerDTO(questionId: qid, answer: ans)
+                    }
                     
                     return AttemptDTO(
                         id: doc.documentID,
                         testId: testId,
                         code: code,
                         email: email,
-                        createdAt: createdAt
+                        createdAt: createdAt,
+                        answers: answers
                     )
                 }
                 completion(.success(items))

@@ -6,6 +6,16 @@ struct AttemptDTO {
     let code: String
     let email: String
     let createdAt: Date
-    // answers можно хранить, если понадобится детальный просмотр
-    // let answers: [(questionId: String, answer: String)]
+    let answers: [AnswerDTO]
+}
+
+struct AnswerDTO {
+    let questionId: String
+    let answer: String
+}
+
+// Question (из questions)
+struct QuestionDTO {
+    let id: String
+    let title: String
 }

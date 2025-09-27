@@ -3,6 +3,7 @@ import Foundation
 protocol StudentColloquiumBusinessLogic: AnyObject {
     func loadHistory()
     func startButtonTapped()
+    func openAttempt(email: String, code: String)
 }
 
 final class StudentColloquiumInteractor: StudentColloquiumBusinessLogic {
@@ -11,11 +12,13 @@ final class StudentColloquiumInteractor: StudentColloquiumBusinessLogic {
 
     private let sessionStore: SessionStoring
     private let historyService: StudentHistoryService
+    private let attemptService: StudentAttemptService
 
     init(sessionStore: SessionStoring = UserDefaultsSessionStore(),
-         historyService: StudentHistoryService = FirebaseStudentHistoryService()) {
+         historyService: StudentHistoryService = FirebaseStudentHistoryService(), attemptService: StudentAttemptService = FirebaseStudentAttemptService()) {
         self.sessionStore = sessionStore
         self.historyService = historyService
+        self.attemptService = attemptService
     }
 
     func loadHistory() {
@@ -36,11 +39,12 @@ final class StudentColloquiumInteractor: StudentColloquiumBusinessLogic {
             case .success(let attempts):
                 // Маппим DTO -> внутренние модели презентера
                 let mapped: [StudentColloquiumModels.History.Item] = attempts.map {
-                    // title можешь подстроить; добавил и testId, и code
                     .init(
                         title: "Коллоквиум \($0.testId) • код \($0.code)",
                         date: $0.createdAt,
-                        score: nil // если в будущем появится оценка — сюда
+                        score: nil,
+                        email: $0.email,
+                        code:  $0.code
                     )
                 }
                 DispatchQueue.main.async {
@@ -49,7 +53,19 @@ final class StudentColloquiumInteractor: StudentColloquiumBusinessLogic {
             }
         }
     }
-
+    
+    func openAttempt(email: String, code: String) {
+        attemptService.fetchAttempt(email: email, code: code) { [weak self] result in
+            switch result {
+            case .failure:
+                // можно показать алерт — пока просто пустую попытку
+                self?.presenter?.presentAttempt(rows: [])
+            case .success(let rows):
+                self?.presenter?.presentAttempt(rows: rows)
+            }
+        }
+    }
+    
     func startButtonTapped() {
         presenter?.presentStart()
     }
