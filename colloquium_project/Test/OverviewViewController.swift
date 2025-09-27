@@ -37,6 +37,7 @@ final class OverviewViewController: UIViewController {
         view.bringSubviewToFront(table)
         print("Overview viewDidLoad — table frame: \(table.frame), superview: \(String(describing: table.superview))")
         interactor?.loadTest()
+        table.hideOnCapture()
     }
     
     // Methods Presenter calls directly on the concrete view (no protocol)
